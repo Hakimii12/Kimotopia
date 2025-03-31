@@ -13,7 +13,7 @@ const colors = {
 
 const theme = extendTheme({ colors })
 createRoot(document.getElementById('root')).render(
-  <ChakraProvider theme={thema}>
+  <ChakraProvider theme={theme}>
     <App />
   </ChakraProvider>,
 )
