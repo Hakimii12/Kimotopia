@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useColorMode } from './components/ui/color-mode'
 import {Button , HStack} from "@chakra-ui/react"
 function App() {
 
