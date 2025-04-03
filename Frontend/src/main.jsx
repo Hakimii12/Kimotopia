@@ -1,3 +1,4 @@
+import ContextApi from '../ContextApi/ContextApi'
 import { Provider } from "@/components/ui/provider"
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -10,15 +11,15 @@ import App from './App.jsx'
 const styles = {
   global: (props) => ({
     body: {
-      color: mode('gray.800', 'whiteAlpha.900')(props),
-      bg: mode('gray.100', '#101010')(props),
+      color: useColorModeValue('gray.800', 'whiteAlpha.900')(props),
+      bg: useColorModeValue('gray.100', '#101010')(props),
     },
   }),
 }
 
 const config = {
   initialColorMode: 'dark',
-  useSystemColorMode: true,
+  useSystemColorMode: false,
 }
 
 const colors = {
@@ -31,9 +32,9 @@ const colors = {
 const theme =extendTheme({ styles, config, colors })
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <ContextApi>
     <Provider theme={theme}>
-      <App />
+      <App/>
     </Provider>
-  </StrictMode>,
+  </ContextApi>,
 )
