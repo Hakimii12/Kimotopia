@@ -10,10 +10,10 @@ function App() {
     <div className={dark? `flex justify-center items-center w-screen h-screen bg-black`
       :`flex justify-center items-center w-screen h-screen bg-white `
     }>
-      <div className="max-w-[620px] w-full h-[100vh]">
+      <div className={`max-w-[620px] w-full h-[100vh] border-2 border-slate-700`}>
         <Header/>
       <Routes>
-         <Route path='/' element={<UserPage/>}/>
+         <Route path='/:username' element={<UserPage/>}/>
          <Route path='/:username/post/:pid' element={<PostPage/>}/>
        </Routes>
        </div>
