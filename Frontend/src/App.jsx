@@ -5,9 +5,13 @@ import UserPage from '../pages/UserPage'
 import PostPage from '../pages/PostPage'
 import Header from './Components/Header'
 function App() {
+  const {dark,setDark,
+    toggleLight}=useContext(ContextProvider)
   return (
-    <div className="flex justify-center items-center w-screen h-screen">
-      <div className="max-w-[620px] w-full h-[100vh] bg-black">
+    <div className={dark? `flex justify-center items-center w-screen h-screen bg-black`
+      :`flex justify-center items-center w-screen h-screen bg-white `
+    }>
+      <div className="max-w-[620px] w-full h-[100vh]">
         <Header/>
       <Routes>
          <Route path='/' element={<UserPage/>}/>
