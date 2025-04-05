@@ -5,8 +5,13 @@ function UserPage() {
 
   return (
     <>
-     <UserHeader/>
+    <div >
+    <UserHeader/>
+    </div>
+    <div className='ml-2 mt-6'>
       <UserPost/>
+    </div>
+      
     </>
      
   )
