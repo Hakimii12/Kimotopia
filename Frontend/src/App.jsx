@@ -10,7 +10,7 @@ function App() {
     <div className={dark? `flex justify-center items-center w-screen h-screen bg-black`
       :`flex justify-center items-center w-screen h-screen bg-white `
     }>
-      <div className={`max-w-[620px] w-full h-[100vh] border-2 border-slate-700`}>
+      <div className={`max-w-[620px] w-full h-[100vh]`}>
         <Header/>
       <Routes>
          <Route path='/:username' element={<UserPage/>}/>
