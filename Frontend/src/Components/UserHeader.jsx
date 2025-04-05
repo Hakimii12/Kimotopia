@@ -30,7 +30,14 @@ function UserHeader() {
              <FaEllipsis/>
         </div>
         </div>
-       
+    </div>
+    <div className={dark ?`w-full text-white flex justify-around `:`w-full flex`}>
+        <div className={`text-center w-[50%] border-b-2 ${dark?`border-white`:`border-black`}`}>
+            <h3>Threads</h3>
+        </div>
+        <div className={`text-center w-[50%] border-b-2 ${dark?`border-white`:`border-black`}`}>
+            <h3>Replies</h3>
+        </div>
     </div>
     </>
    
