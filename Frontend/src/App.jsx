@@ -5,8 +5,7 @@ import UserPage from '../pages/UserPage'
 import PostPage from '../pages/PostPage'
 import Header from './Components/Header'
 function App() {
-  const {dark,setDark,
-    toggleLight}=useContext(ContextProvider)
+  const {dark}=useContext(ContextProvider)
   return (
     <div className={dark? `flex justify-center items-center w-screen h-screen bg-black`
       :`flex justify-center items-center w-screen h-screen bg-white `

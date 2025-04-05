@@ -4,8 +4,7 @@ import darkLogo from "../assets/dark-logo.svg"
 import { useContext } from 'react'
 import { ContextProvider } from '../../ContextApi/ContextApi'
 function Header() {
-  const {dark,setDark,
-    toggleLight,toggleDark}=useContext(ContextProvider)
+  const {dark,toggleLight,toggleDark}=useContext(ContextProvider)
     console.log(dark)
   return (
     <div className='flex items-center justify-center mt-6'>
