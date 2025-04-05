@@ -7,10 +7,10 @@ import Header from './Components/Header'
 function App() {
   const {dark}=useContext(ContextProvider)
   return (
-    <div className={dark? `flex justify-center items-center w-screen h-screen bg-black`
-      :`flex justify-center items-center w-screen h-screen bg-white `
+    <div className={dark? `bg-black flex justify-center items-center w-screen min-h-screen`
+      :` bg-white flex justify-center items-center w-screen min-h-screen `
     }>
-      <div className={`max-w-[620px] w-full h-[100vh]`}>
+      <div className={`max-w-[620px] w-full min-h-[100vh]`}>
         <Header/>
       <Routes>
          <Route path='/:username' element={<UserPage/>}/>
@@ -18,8 +18,6 @@ function App() {
        </Routes>
        </div>
     </div>
-    
-    
   )
 }
 
