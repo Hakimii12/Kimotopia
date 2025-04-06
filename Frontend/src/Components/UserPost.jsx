@@ -14,7 +14,7 @@ function UserPost() {
     liked}=useContext(ContextProvider)
     console.log(liked)
   return (
-    <Link className='flex w-full' to={"/markzukerberg/post/1"}>
+    <Link className='mt-6 flex w-full' to={"/markzukerberg/post/1"}>
       <div className='w-[10%] flex flex-col items-center'>
         <img src={profile} className='w-full rounded-full' />
         <div className="h-full w-[1px] bg-gray-300"></div> {/* Changed h-[300px] to h-full */}
@@ -55,6 +55,5 @@ function UserPost() {
       </div>
     </Link>
   )
-}
-
+} 
 export default UserPost

@@ -10,6 +10,9 @@ function UserPage() {
     </div>
     <div className='ml-2 mt-6'>
       <UserPost/>
+      <UserPost/>
+      <UserPost/>
+      <UserPost/>
     </div>
       
     </>
