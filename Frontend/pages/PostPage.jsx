@@ -1,8 +1,8 @@
-import React from 'react'
+import UserPostPage from "@/Components/UserPostPage"
 function PostPage() {
   return (
     <div>
-      <h2>welcome to post page</h2>
+      <UserPostPage/>
     </div>
   )
 }

@@ -16,7 +16,7 @@ function App() {
       }
     >
       <div
-        className={`sm:max-w-[620px] w-full px-4 py-6 border-2 border-black max-w-full overflow-hidden`}
+        className={`sm:max-w-[620px] w-full px-4 py-6  max-w-full overflow-hidden`}
         style={{
           WebkitTextSizeAdjust: '100%',
           MozTextSizeAdjust: '100%',

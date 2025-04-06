@@ -5,15 +5,13 @@ import {FaEllipsisH } from 'react-icons/fa'
 import verified from "../assets/verified.png"
 import post1 from '../assets/post1.png'
 import {BiLike, BiComment, BiShare, BiRepost } from 'react-icons/bi'
-import { FcLike} from 'react-icons/fc'
 import { ContextProvider } from '../../ContextApi/ContextApi'
 import { useContext } from 'react'
-import { SlLike } from 'react-icons/sl'
 function UserPost() {
   const {toggleLiked,
     liked}=useContext(ContextProvider)
-    console.log(liked)
   return (
+    <>
     <Link className='mt-6 flex w-full' to={"/markzukerberg/post/1"}>
       <div className='w-[10%] flex flex-col items-center'>
         <img src={profile} className='w-full rounded-full' />
@@ -41,10 +39,10 @@ function UserPost() {
         <div className='h-full mt-4 w-full'>
           <img className='h-[72%] w-[80%] rounded-lg' src={post1} alt="" />
           <div className="w-[25%] mt-4 flex justify-between">
-            <BiLike onClick={(e)=>toggleLiked(e)} color={liked?`red`:``}/>
-            <BiComment />
-            <BiRepost />
-            <BiShare />
+            <BiLike size={20} onClick={(e)=>toggleLiked(e)} color={liked?`red`:``}/>
+            <BiComment size={20}/>
+            <BiRepost size={20}/>
+            <BiShare size={20}/>
           </div>
           <div className='flex gap-2  sm:p-2 ml-4  font-light text-sm'>
               <span>338 replies</span>
@@ -54,6 +52,9 @@ function UserPost() {
         </div>
       </div>
     </Link>
+    <div className="my-5 mx-5 h-[1px] w-full bg-gray-300"></div>
+    </>
+    
   )
 } 
 export default UserPost
