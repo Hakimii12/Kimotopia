@@ -10,8 +10,8 @@ function Comment() {
         liked}=useContext(ContextProvider)
   return (
     <>
-        <div className=" mx-14 h-[1px] w-full bg-gray-300"></div>
-    <div className='mt-4 mb-4 mx-14 flex w-[99%]'>
+        <div className="w-[90%] mx-10 h-[1px] bg-gray-300"></div>
+    <div className='mt-4 mb-4 mx-14 flex sm:w-[99%] w-[90%]'>
     <div className='w-[5%] flex flex-col items-center'>
       <img src={profile} className='w-full rounded-full' />
     </div>
