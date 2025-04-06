@@ -1,12 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import profile from '../assets/zuck-avatar.png'
-import { FaEllipsisH } from 'react-icons/fa'
+import {FaEllipsisH } from 'react-icons/fa'
 import verified from "../assets/verified.png"
 import post1 from '../assets/post1.png'
-import { BiLike, BiComment, BiShare, BiRepost } from 'react-icons/bi'
-
+import {BiLike, BiComment, BiShare, BiRepost } from 'react-icons/bi'
+import { FcLike} from 'react-icons/fc'
+import { ContextProvider } from '../../ContextApi/ContextApi'
+import { useContext } from 'react'
+import { SlLike } from 'react-icons/sl'
 function UserPost() {
+  const {toggleLiked,
+    liked}=useContext(ContextProvider)
+    console.log(liked)
   return (
     <Link className='flex w-full' to={"/markzukerberg/post/1"}>
       <div className='w-[10%] flex flex-col items-center'>
@@ -31,14 +37,19 @@ function UserPost() {
             <FaEllipsisH />
           </div>
         </div>
-        <p className='ml-2 sm:mt-3'>let's talk about threads.</p>
+        <p className='ml-2 sm:mt-3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos modi quisquam ab excepturi harum iure recusandae natus quos voluptates consequuntur ex, corporis corrupti, illum possimus voluptatibus amet. Temporibus, maiores alias.</p>
         <div className='h-full mt-4 w-full'>
           <img className='h-[72%] w-[80%] rounded-lg' src={post1} alt="" />
-          <div className="w-[25%] mt-2 flex justify-between">
-            <BiLike/>
+          <div className="w-[25%] mt-4 flex justify-between">
+            <BiLike onClick={(e)=>toggleLiked(e)} color={liked?`red`:``}/>
             <BiComment />
             <BiRepost />
             <BiShare />
+          </div>
+          <div className='flex gap-2  sm:p-2 ml-4  font-light text-sm'>
+              <span>338 replies</span>
+              <span>&bull;</span>
+              <span>801 likes</span>
           </div>
         </div>
       </div>

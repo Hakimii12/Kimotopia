@@ -5,6 +5,7 @@ import { useState } from "react";
 function ContextApi({children}) {
   const [dark,setDark]=useState(false)
   const [threads,setThreads]=useState(true)
+  const [liked,setLiked]=useState(false)
   function toggleDark(){
     setDark(true);
   }
@@ -17,13 +18,20 @@ function ContextApi({children}) {
   function toggleReplies(){
     setThreads(false)
   }
+  function toggleLiked(e){
+    e.preventDefault();
+    e.stopPropagation(); // Prevents the click event from propagating to the parent <Link>
+    setLiked(!liked);
+  }
   const data={
     dark,setDark,
     toggleLight,
     toggleDark,
     toggleThreads,
     toggleReplies,
-    threads
+    threads,
+    toggleLiked,
+    liked
   }
   return (
     <ContextProvider.Provider value={data}>
