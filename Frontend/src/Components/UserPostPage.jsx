@@ -8,10 +8,9 @@ import { ContextProvider } from '../../ContextApi/ContextApi'
 import { useContext } from 'react'
 import Comment from './Comment'
 function UserPostPage() {
-    const {toggleLiked,
-        liked}=useContext(ContextProvider)
+    const {toggleLiked,dark,liked}=useContext(ContextProvider)
   return (
-    <div className='mt-6 flex flex-col w-full'>
+    <div className={dark?`text-white mt-6 flex flex-col w-full`:`text-black mt-6 flex flex-col w-full`}>
     <div className='mt-6 flex w-full'>
     <div className='w-[10%] flex flex-col items-center'>
       <img src={profile} className='w-full rounded-full' />

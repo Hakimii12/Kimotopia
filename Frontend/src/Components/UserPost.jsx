@@ -8,10 +8,10 @@ import {BiLike, BiComment, BiShare, BiRepost } from 'react-icons/bi'
 import { ContextProvider } from '../../ContextApi/ContextApi'
 import { useContext } from 'react'
 function UserPost() {
-  const {toggleLiked,liked}=useContext(ContextProvider)
+  const {toggleLiked,liked,dark}=useContext(ContextProvider)
   return (
     <>
-    <Link className='mt-6 flex w-full' to={"/markzukerberg/post/1"}>
+    <Link className={dark?`text-white mt-6 flex w-full`:`text-black mt-6 flex w-full`} to={"/markzukerberg/post/1"}>
       <div className='w-[10%] flex flex-col items-center'>
         <img src={profile} className='w-full rounded-full' />
         <div className="h-full w-[1px] bg-gray-300"></div> {/* Changed h-[300px] to h-full */}
