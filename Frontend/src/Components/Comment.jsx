@@ -9,7 +9,7 @@ function Comment() {
       const {toggleLiked,liked}=useContext(ContextProvider)
   return (
     <>
-        <div className="w-[90%] mx-10 h-[1px] bg-gray-300"></div>
+        <div className="w-[90%] mx-10 h-[1px] bg-gray-300 text-sm"></div>
     <div className='mt-4 mb-4 mx-14 flex sm:w-[99%] w-[90%]'>
     <div className='w-[5%] flex flex-col items-center'>
       <img src={profile} className='w-full rounded-full' />
@@ -22,12 +22,12 @@ function Comment() {
             <img src={verified} className='w-[15px] h-4' />
           </div>
         </div>
-        <div className='mr-2 flex gap-2 items-center'>
+        <div className='mr-2 flex gap-2 items-center text-sm'>
           <p>1d</p>
           <FaEllipsisH />
         </div>
       </div>
-      <p className='ml-2 sm:mt-3'>Lorem ipsum, dolor sit amet consectetur.</p>
+      <p className='ml-2 sm:mt-3 text-sm'>Lorem ipsum, dolor sit amet consectetur.</p>
       <div className='h-full mt-4 w-full'>
         <div className="w-[25%]  flex justify-between">
           <BiLike size={17} onClick={(e)=>toggleLiked(e)} color={liked?`red`:``}/>
@@ -36,7 +36,7 @@ function Comment() {
           <BiShare size={17}/>
         </div>
         <div className='flex gap-2 mt-2 font-light text-sm'>
-            <span>801 likes</span>
+            <span className='font-extralight'>801 likes</span>
         </div>
       </div>
     </div>

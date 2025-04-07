@@ -10,7 +10,7 @@ import Comment from './Comment'
 function UserPostPage() {
     const {toggleLiked,dark,liked}=useContext(ContextProvider)
   return (
-    <div className={dark?`text-white mt-6 flex flex-col w-full`:`text-black mt-6 flex flex-col w-full`}>
+    <div className={dark?`text-white mt-6 flex flex-col w-full sm:text-lg text-sm`:`text-black mt-6 flex flex-col w-full sm:text-lg text-sm`}>
     <div className='mt-6 flex w-full'>
     <div className='w-[10%] flex flex-col items-center'>
       <img src={profile} className='w-full rounded-full' />
@@ -40,7 +40,7 @@ function UserPostPage() {
         <div className='flex gap-2 mt-1 font-light text-sm'>
             <span>338 replies</span>
             <span>&bull;</span>
-            <span>801 likes</span>
+            <span>{200 + (liked? 1:0)} likes</span>
         </div>
       </div>
     </div> 
