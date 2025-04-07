@@ -6,8 +6,7 @@ import {BiLike, BiComment, BiShare, BiRepost } from 'react-icons/bi'
 import { ContextProvider } from '../../ContextApi/ContextApi'
 import { useContext } from 'react'
 function Comment() {
-      const {toggleLiked,
-        liked}=useContext(ContextProvider)
+      const {toggleLiked,liked}=useContext(ContextProvider)
   return (
     <>
         <div className="w-[90%] mx-10 h-[1px] bg-gray-300"></div>

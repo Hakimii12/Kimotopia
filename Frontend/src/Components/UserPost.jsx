@@ -8,8 +8,7 @@ import {BiLike, BiComment, BiShare, BiRepost } from 'react-icons/bi'
 import { ContextProvider } from '../../ContextApi/ContextApi'
 import { useContext } from 'react'
 function UserPost() {
-  const {toggleLiked,
-    liked}=useContext(ContextProvider)
+  const {toggleLiked,liked}=useContext(ContextProvider)
   return (
     <>
     <Link className='mt-6 flex w-full' to={"/markzukerberg/post/1"}>
