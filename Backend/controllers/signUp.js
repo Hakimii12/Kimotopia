@@ -23,7 +23,8 @@ export async function signUp(req,res) {
             email:email,
             password:hashedPassword
         })
-        await newUser.save()  
+        await newUser.save()
+        return res.status(200).json({message:"successfully created new user"}) 
     } catch (error) {
        res.status(500).json({message:error.message}) 
     }
