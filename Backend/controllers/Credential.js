@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 import Token from '../utlis/jwtAndCookies.js'
-import jwt from "jsonwebtoken"
 export async function signUp(req,res) {
     try {
         const {name,username,email,password}=req.body
@@ -89,4 +88,7 @@ export async function followUnfollow(req,res){
     } catch (error) {
         res.status(500).json({message:error.message}) 
     }
+}
+export async function update(req,res){
+
 }
