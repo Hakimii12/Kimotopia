@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 import Token from '../utlis/jwtAndCookies.js'
+import jwt from "jsonwebtoken"
 export async function signUp(req,res) {
     try {
         const {name,username,email,password}=req.body
@@ -61,5 +62,31 @@ export function logout(req,res){
         return res.status(200).json({message:"successfully logged out"})
     } catch (error) {
         res.status(500).json({message:error.message})
+    }
+}
+export async function followUnfollow(req,res){
+    try {
+      const  {id}=req.params
+      const userToBeFollowed=await User.findById(id)
+      const userToFollow=await User.findById(req.user._id)
+     if(userToBeFollowed===userToFollow){
+        return res.status(400).json({message:"you cannot follo or unfollow yourself"})
+     }
+     if(!userToBeFollowed || !userToFollow){
+        return res.status(400).json({message:"user not found"})
+     }
+         const isFollowing=userToFollow.following.includes(id)
+    if(isFollowing){
+        await User.findByIdAndUpdate(req.user._id,{$pull:{following:id}})
+        await User.findByIdAndUpdate(id,{$pull:{followers:req.user._id}})
+        res.status(200).json({message:"successfully unfollowed"})
+    }else{
+        await User.findByIdAndUpdate(req.user._id,{$push:{following:id}})
+        await User.findByIdAndUpdate(id,{$push:{followers:req.user._id}})
+        res.status(200).json({message:"successfully followed"})
+    }
+      
+    } catch (error) {
+        res.status(500).json({message:error.message}) 
     }
 }
