@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
+import Token from '../utlis/jwtAndCookies.js'
 export async function signUp(req,res) {
     try {
         const {name,username,email,password}=req.body
@@ -23,6 +24,7 @@ export async function signUp(req,res) {
             email:email,
             password:hashedPassword
         })
+        Token(newUser._id,res)
         await newUser.save()
         return res.status(200).json({message:"successfully created new user"}) 
     } catch (error) {
