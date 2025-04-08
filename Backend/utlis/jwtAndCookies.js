@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
 function jwtToken(userId,res){
+    dotenv.config()
     const token=jwt.sign(
         {userId},
-        "my-secrate-key",
+        process.env.JWT_SECRET,
         {expiresIn:"3h"}
     )
     res.cookie("jwt",token,{
