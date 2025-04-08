@@ -8,7 +8,7 @@ router.post('/signUp',signUp)
 router.post('/login',login)
 router.post('/logout',logout)
 router.post('/followunfollow/:id',Authorization,followUnfollow)
-router.post('/update',Authorization,update)
+router.post('/update/:id',Authorization,update)
 
 
 

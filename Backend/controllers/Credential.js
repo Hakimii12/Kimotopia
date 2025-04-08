@@ -90,5 +90,29 @@ export async function followUnfollow(req,res){
     }
 }
 export async function update(req,res){
-
+    try {
+           const {name,username,password,bio,profilepic,email}=req.body
+           const user=await User.findById(req.user._id)
+            if(req.params.id!==req.user._id.toString()){
+                return res.status(400).json({messsage:"you cannot update other profile"})
+            }
+            if(!user){
+                return res.status(400).json({message:"user not found"})
+            }
+            if(password){
+                const salt =await bcrypt.genSalt(10);
+                const hashedPassword=await bcrypt.hash(password,salt)
+                user.password=hashedPassword
+            }
+            user.name=name || user.name
+            user.username=username || user.username
+            user.bio=bio || user.bio
+            user.profilepic = profilepic || user.profilepic
+            user.email =email || user.email
+            await user.save()
+            res.status(200).json({message:`successfully updated`})
+    } catch (error) {
+        res.status(500).json({message:error.message}) 
+    }
+    
 }
