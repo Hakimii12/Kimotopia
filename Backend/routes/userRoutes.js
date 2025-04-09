@@ -1,5 +1,5 @@
 import express from 'express'
-import {followUnfollow, getUser, login, logout, signUp, update} from '../controllers/Credential.js'
+import {followUnfollow, getUser, login, logout, signUp, update} from '../controllers/UserActivities.js'
 import Authorization from '../middlewares/Authorization.js'
 const router=express.Router()
 router.post('/signUp',signUp)

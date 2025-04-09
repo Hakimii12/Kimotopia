@@ -78,11 +78,11 @@ export async function followUnfollow(req,res){
     if(isFollowing){
         await User.findByIdAndUpdate(req.user._id,{$pull:{following:id}})
         await User.findByIdAndUpdate(id,{$pull:{followers:req.user._id}})
-        res.status(200).json({message:"successfully unfollowed"})
+        res.status(200).json({message:"unfollowed"})
     }else{
         await User.findByIdAndUpdate(req.user._id,{$push:{following:id}})
         await User.findByIdAndUpdate(id,{$push:{followers:req.user._id}})
-        res.status(200).json({message:"successfully followed"})
+        res.status(200).json({message:"followed"})
     }
       
     } catch (error) {
