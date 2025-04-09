@@ -93,3 +93,28 @@ export async function LikeDislikePost(req,res){
         res.status(500).json({message:error.message})
     }
 }
+export async function Reply(req,res){
+    try {
+        const {id}=req.params
+        const {text}=req.body
+        const username=req.user.username
+        const profilepic=req.user.profilepic
+        const userId=req.user._id
+        const userToReply=await User.findById(req.user._id).select("-password")
+        const post =await Post.findById(id)
+        if(!post){
+            return res.status(404).json({message:"post not found"})
+        }
+        if(!userToReply){
+            return res.status(404).json({message:"user not found"})
+        }
+        const reply={username,profilepic,text,userId}
+        await post.comment.push(reply)
+        await post.save()
+        return res.status(200).json({message:`${username} replyed to your post`})
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+    
+
+}
