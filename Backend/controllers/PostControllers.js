@@ -67,3 +67,31 @@ export async function DeletePost(req,res){
         res.status(500).json({message:error.message}) 
     }
 }
+export async function LikeDislikePost(req,res){
+    try {
+        const {id}=req.params
+        if(!id){
+            return res.status(404).json({message:"no post"})
+        }
+        const post=await Post.findById(id)
+        console.log(post.like)
+        if(!post){
+            return res.status(404).json({message:"post no found"})
+        }
+        const userToLike=await User.findById(req.user._id).select("-password")
+        console.log(userToLike._id)
+        if(!userToLike){
+            return res.status(404).json({message:"user not found"})
+        }
+        const isLiked=post.like.includes(userToLike._id)
+        if(isLiked){
+            await Post.findByIdAndUpdate(id,{$pull:{like:userToLike._id}})
+            return res.status(200).json({message:"disliked"})
+        }else{
+            await Post.findByIdAndUpdate(id,{$push:{like:userToLike._id}})
+            return res.status(200).json({message:"liked"})
+        }
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+}
