@@ -27,3 +27,20 @@ export async function CreatePost(req,res){
     }
 
 }
+export async function GetPost(req,res) {
+    try {
+        const {id}=req.params
+        if(!id){
+            return res.status(404).json({message:"no post"})
+        }
+        const post=await Post.findById(id)
+        if(!post){
+            return res.status(404).json({message:"post not found"})
+        }
+
+        return res.status(200).json({post})
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+}
