@@ -74,12 +74,10 @@ export async function LikeDislikePost(req,res){
             return res.status(404).json({message:"no post"})
         }
         const post=await Post.findById(id)
-        console.log(post.like)
         if(!post){
             return res.status(404).json({message:"post no found"})
         }
         const userToLike=await User.findById(req.user._id).select("-password")
-        console.log(userToLike._id)
         if(!userToLike){
             return res.status(404).json({message:"user not found"})
         }
