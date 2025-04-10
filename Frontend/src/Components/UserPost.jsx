@@ -74,7 +74,7 @@ function UserPost() {
             </div>
 
             {/* Post content */}
-            <div className="mt-3 mb-5">
+            <div className="sm:text-base text-sm mt-3 mb-5">
               <p className={`text-lg leading-relaxed ${theme.text}`}>
                 Building the future of social connection through innovative technology at Meta. 
                 <span className={`block mt-2 ${theme.accent} font-medium`}>#FutureIsComing</span>

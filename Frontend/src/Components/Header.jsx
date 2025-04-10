@@ -44,7 +44,7 @@ function Header() {
           bg-clip-text text-transparent
           hidden sm:block
         `}>
-          MyApp
+          Kimotopia
         </h1>
       </div>
 
