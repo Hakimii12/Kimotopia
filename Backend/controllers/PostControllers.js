@@ -118,3 +118,29 @@ export async function Reply(req,res){
     
 
 }
+export async function getFeedPosts(req, res) {
+    try {
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const following = user.following;
+        
+        // Return empty array if not following anyone (this is a normal case)
+        if (following.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        const feed = await Post.find({ postedBy: { $in: following } })
+            .sort({ createdAt: -1 }) // Newest first
+            .limit(20); // Add pagination limit
+
+        return res.status(200).json(feed);
+    } catch (error) {
+        console.error("Error in getFeedPosts:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
