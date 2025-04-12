@@ -1,8 +1,9 @@
 import SignUp from "@/Components/SignUp"
+import Login from '@/Components/Login'
 function SignUpPage() {
   return (
     <div>
-      <SignUp/>
+      <Login/>
     </div>
   )
 }

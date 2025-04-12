@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import UserPage from '../pages/UserPage'
 import PostPage from '../pages/PostPage'
 import Header from './Components/Header'
-import SignUpPage from '../pages/SignUpPage'
+import Authentication from '../pages/authentication'
 import {toast,ToastContainer} from 'react-toastify'
 function App() {
   const { dark } = useContext(ContextProvider)
@@ -65,7 +65,7 @@ function App() {
     }}
   />
         <Routes>
-        <Route path='/signUp' element={<SignUpPage />} />
+          <Route path='/signUp' element={<Authentication/>} />
           <Route path='/:username' element={<UserPage />} />
           <Route path='/:username/post/:pid' element={<PostPage />} />
         </Routes>
