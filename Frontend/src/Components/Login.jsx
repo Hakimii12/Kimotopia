@@ -1,11 +1,13 @@
-import React, { useState, useContext, use } from 'react';
-import { Link } from 'react-router-dom';
-import { FiAtSign, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
+import { useState, useContext, use } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi'; // Import your context
 import axios from 'axios'
 import {toast,ToastContainer} from 'react-toastify'
-function SignUp() {
-  const { dark } = useContext(ContextProvider); // Get dark mode from context
+import { Link, useNavigate } from 'react-router-dom';
+import { FiAtSign, FiEye, FiEyeOff, FiLock } from 'react-icons/fi';
+function Login() {
+  const { dark,auth,setAuth} = useContext(ContextProvider); // Get dark mode from context
+  const navigate=useNavigate()
+  console.log(auth)
   const [username,setUsername]=useState('')
   const [password,setPassword]=useState('')
   const [errors, setErrors] = useState({});
@@ -66,7 +68,7 @@ function SignUp() {
           {/* Password */}
           <div className="relative">
             <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
-              <FiLock />
+              <FiLock/>
             </div>
             <input
               type={showPassword ? "text" : "password"}
@@ -108,7 +110,12 @@ function SignUp() {
 
         <div className={`mt-6 text-center ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
           Don&apos;t have an acccount ?{' '}
-          <Link to="/login" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors">
+          <Link to="/signUp" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"
+          onClick={()=>{
+            setAuth('signUp')
+            // navigate("/signUp")
+          }}
+          >
             Sign up
           </Link>
         </div>
@@ -117,4 +124,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default Login;

@@ -32,7 +32,9 @@ function SignUp() {
             }
         }).catch((err)=>{
            toast.error(err.response.data.message)
-           console.log(err.response.data.message)
+           console.log(err
+            
+           )
         })
       setIsSubmitting(true);
       setTimeout(() => {
@@ -150,7 +152,12 @@ function SignUp() {
 
         <div className={`mt-6 text-center ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
           Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors">
+          <Link to="/login" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"
+          onClick={()=>{
+            setAuth('login')
+            // navigate("/signUp")
+          }}
+          >
             Log in
           </Link>
         </div>

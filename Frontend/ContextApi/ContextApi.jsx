@@ -6,6 +6,7 @@ function ContextApi({children}) {
   const [dark,setDark]=useState(false)
   const [threads,setThreads]=useState(true)
   const [liked,setLiked]=useState(false)
+  const [auth,setAuth]=useState('login')
   function toggleDark(){
     setDark(true);
   }
@@ -31,7 +32,8 @@ function ContextApi({children}) {
     toggleReplies,
     threads,
     toggleLiked,
-    liked
+    liked,
+    auth,setAuth
   }
   return (
     <ContextProvider.Provider value={data}>
