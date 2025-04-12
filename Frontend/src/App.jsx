@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import UserPage from '../pages/UserPage'
 import PostPage from '../pages/PostPage'
 import Header from './Components/Header'
+import SignUpPage from '../pages/SignUpPage'
 
 function App() {
   const { dark } = useContext(ContextProvider)
@@ -25,6 +26,7 @@ function App() {
       >
         <Header />
         <Routes>
+        <Route path='/signUp' element={<SignUpPage />} />
           <Route path='/:username' element={<UserPage />} />
           <Route path='/:username/post/:pid' element={<PostPage />} />
         </Routes>
