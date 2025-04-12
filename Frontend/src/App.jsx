@@ -5,7 +5,7 @@ import UserPage from '../pages/UserPage'
 import PostPage from '../pages/PostPage'
 import Header from './Components/Header'
 import SignUpPage from '../pages/SignUpPage'
-
+import {toast,ToastContainer} from 'react-toastify'
 function App() {
   const { dark } = useContext(ContextProvider)
   return (
@@ -25,6 +25,45 @@ function App() {
         }}
       >
         <Header />
+        <ToastContainer
+    position="top-right"
+    autoClose={3000}
+    limit={3}
+    hideProgressBar={false}
+    newestOnTop
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="colored"
+    style={{
+      // Container positioning
+      top: '1em',
+      right: '1em',
+    }}
+    toastStyle={{
+      // All toast styles
+      borderRadius: '12px',
+      padding: '16px 20px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      fontSize: '14px',
+      fontWeight: '500',
+      minHeight: '60px',
+      // Default background (will be overridden by theme colors)
+      background: 'linear-gradient(135deg, #4a6fa5, #3a5a8a)',
+      color: '#fff',
+    }}
+    progressStyle={{
+      background: 'rgba(255, 255, 255, 0.4)',
+      height: '3px',
+    }}
+    bodyStyle={{
+      margin: '0',
+      padding: '0',
+    }}
+  />
         <Routes>
         <Route path='/signUp' element={<SignUpPage />} />
           <Route path='/:username' element={<UserPage />} />

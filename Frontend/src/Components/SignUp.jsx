@@ -2,7 +2,8 @@ import React, { useState, useContext, use } from 'react';
 import { Link } from 'react-router-dom';
 import { FiUser, FiAtSign, FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { ContextProvider } from '../../ContextApi/ContextApi'; // Import your context
-
+import axios from 'axios'
+import {toast,ToastContainer} from 'react-toastify'
 function SignUp() {
   const { dark } = useContext(ContextProvider); // Get dark mode from context
   const [fullName,setFullName]=useState('')
@@ -14,7 +15,25 @@ function SignUp() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-      console.log(fullName,username,email,password)
+    const formData =new FormData();
+    formData.append('name',fullName);
+    formData.append('username',username);
+    formData.append('email',email);
+    formData.append('password',password);
+    axios
+        .post("http://localhost:4000/api/user/signUp",formData,{
+            headers:{
+                'Content-Type':'application/json'
+            }
+        })
+        .then((res)=>{
+            if(res.data.message){
+                toast.success(res.data.message)
+            }
+        }).catch((err)=>{
+           toast.error(err.response.data.message)
+           console.log(err.response.data.message)
+        })
       setIsSubmitting(true);
       setTimeout(() => {
         setIsSubmitting(false);
