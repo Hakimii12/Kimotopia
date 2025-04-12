@@ -6,6 +6,7 @@ import PostPage from '../pages/PostPage'
 import Header from './Components/Header'
 import Authentication from '../pages/authentication'
 import {toast,ToastContainer} from 'react-toastify'
+import Home from '../pages/Home'
 function App() {
   const { dark,auth} = useContext(ContextProvider)
   return (
@@ -65,6 +66,7 @@ function App() {
     }}
   />
         <Routes>
+          <Route path='/' element={<Home/>}/>
           <Route path='/login' element={<Authentication/>}/>
           <Route path='/signUp' element={<Authentication/>}/>
           <Route path='/:username' element={<UserPage />} />
