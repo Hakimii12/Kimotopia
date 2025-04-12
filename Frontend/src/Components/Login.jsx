@@ -22,12 +22,14 @@ function Login() {
         .post("http://localhost:4000/api/user/login",formData,{
             headers:{
                 'Content-Type':'application/json'
-            }
+            },
+            withCredentials: true
         })
         .then((res)=>{
             if(res.data.message){
                 toast.success(res.data.message)
             }
+            navigate('/')
         }).catch((err)=>{
            toast.error(err.response.data.message)
            console.log(err.response.data.message)

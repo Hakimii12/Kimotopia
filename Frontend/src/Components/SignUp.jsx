@@ -24,17 +24,17 @@ function SignUp() {
         .post("http://localhost:4000/api/user/signUp",formData,{
             headers:{
                 'Content-Type':'application/json'
-            }
+            },
+            withCredentials: true
         })
         .then((res)=>{
             if(res.data.message){
                 toast.success(res.data.message)
             }
+            navigate('/')
         }).catch((err)=>{
-           toast.error(err.response.data.message)
-           console.log(err
-            
-           )
+          //  toast.error(err.response.data.message)
+           console.log(err)
         })
       setIsSubmitting(true);
       setTimeout(() => {

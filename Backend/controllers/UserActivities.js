@@ -57,8 +57,16 @@ export async function login(req,res){
 }
 export function logout(req,res){
     try {
-        res.clearCookie('jwt',{expires:new Date(0)})
-        return res.status(200).json({message:"successfully logged out"})
+ // Clear the JWT cookie with secure settings
+ res.clearCookie('jwt', {
+    httpOnly: true,    // Prevents client-side JS access
+    secure: process.env.NODE_ENV === 'production', // HTTPS-only in production
+    sameSite: 'strict', // Prevents CSRF attacks
+    path: '/',         // Ensures cookie is cleared across all paths
+});
+// Optionally, invalidate the token on the server (if using a token blacklist)
+// Example: await TokenBlacklist.add(req.cookies.jwt);
+return res.status(200).json({ message: "Successfully logged out" });
     } catch (error) {
         res.status(500).json({message:error.message})
     }
