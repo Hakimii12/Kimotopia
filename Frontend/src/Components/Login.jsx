@@ -15,11 +15,9 @@ function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData =new FormData();
-    formData.append('username',username);
-    formData.append('password',password);
     axios
-        .post("http://localhost:4000/api/user/login",formData,{
+        .post("http://localhost:4000/api/user/login",{username,
+          password},{
             headers:{
                 'Content-Type':'application/json'
             },
