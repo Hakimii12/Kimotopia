@@ -1,11 +1,11 @@
 import React, { useState, useContext, use } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { data, Link, Navigate, useNavigate } from 'react-router-dom';
 import { FiUser, FiAtSign, FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { ContextProvider } from '../../ContextApi/ContextApi'; // Import your context
 import axios from 'axios'
 import {toast,ToastContainer} from 'react-toastify'
 function SignUp() {
-  const { dark } = useContext(ContextProvider); // Get dark mode from context
+  const { dark,setIsAuth} = useContext(ContextProvider); // Get dark mode from context
   const navigate = useNavigate()
   const [fullName,setFullName]=useState('')
   const [username,setUsername]=useState('')
@@ -16,11 +16,6 @@ function SignUp() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const formData =new FormData();
-    // formData.append('name',fullName);
-    // formData.append('username',username);
-    // formData.append('email',email);
-    // formData.append('password',password);
   try {
     axios
     .post("http://localhost:4000/api/user/signUp",{ 
@@ -40,16 +35,13 @@ function SignUp() {
             toast.success(response.data.message)
         }
         navigate('/')
+      const data=response.data.user
+      localStorage.setItem("user-threads",JSON.stringify(data));
+    }).catch((error)=>{
+      return toast.error(error.response.data.message)
     })
   } catch (error) {
-    ((error)=>{
-          if(error){
-            console.log(error)
-            toast.error(error.response.data.message)
-             console.log(error.response.data.message)
-          }
-
-        })
+    return toast.error("please try again")
   }
 
       setIsSubmitting(true);

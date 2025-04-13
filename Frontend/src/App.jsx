@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { ContextProvider } from '../ContextApi/ContextApi'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import UserPage from '../pages/UserPage'
 import PostPage from '../pages/PostPage'
 import Header from './Components/Header'
@@ -8,7 +8,7 @@ import Authentication from '../pages/authentication'
 import {toast,ToastContainer} from 'react-toastify'
 import Home from '../pages/Home'
 function App() {
-  const { dark,auth} = useContext(ContextProvider)
+  const { dark,isAuth,} = useContext(ContextProvider)
   return (
     <div
       className={
@@ -27,50 +27,50 @@ function App() {
       >
         <Header />
         <ToastContainer
-    position="top-right"
-    autoClose={3000}
-    limit={3}
-    hideProgressBar={false}
-    newestOnTop
-    closeOnClick
-    rtl={false}
-    pauseOnFocusLoss
-    draggable
-    pauseOnHover
-    theme="colored"
-    style={{
-      // Container positioning
-      top: '1em',
-      right: '1em',
-    }}
-    toastStyle={{
-      // All toast styles
-      borderRadius: '12px',
-      padding: '16px 20px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      fontSize: '14px',
-      fontWeight: '500',
-      minHeight: '60px',
-      // Default background (will be overridden by theme colors)
-      background: 'linear-gradient(135deg, #4a6fa5, #3a5a8a)',
-      color: '#fff',
-    }}
-    progressStyle={{
-      background: 'rgba(255, 255, 255, 0.4)',
-      height: '3px',
-    }}
-    bodyStyle={{
-      margin: '0',
-      padding: '0',
-    }}
+              position="top-right"
+              autoClose={3000}
+              limit={3}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="colored"
+              style={{
+                // Container positioning
+                top: '1em',
+                right: '1em',
+              }}
+              toastStyle={{
+                // All toast styles
+                borderRadius: '12px',
+                padding: '16px 20px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                fontFamily: 'system-ui, -apple-system, sans-serif',
+                fontSize: '14px',
+                fontWeight: '500',
+                minHeight: '60px',
+                // Default background (will be overridden by theme colors)
+                background: 'linear-gradient(135deg, #4a6fa5, #3a5a8a)',
+                color: '#fff',
+              }}
+              progressStyle={{
+                background: 'rgba(255, 255, 255, 0.4)',
+                height: '3px',
+              }}
+              bodyStyle={{
+                margin: '0',
+                padding: '0',
+              }}
   />
         <Routes>
-          <Route path='/' element={<Home/>}/>
+          <Route path='/' element={isAuth?<Home/>:<Navigate to="/login" />}/>
           <Route path='/login' element={<Authentication/>}/>
           <Route path='/signUp' element={<Authentication/>}/>
-          <Route path='/:username' element={<UserPage />} />
-          <Route path='/:username/post/:pid' element={<PostPage />} />
+          <Route path='/:username' element={isAuth? <UserPage /> : <Navigate to="/login"/>} />
+          <Route path='/:username/post/:pid' element={isAuth? <PostPage/> : <Navigate to="/login"/>} />
         </Routes>
       </div>
     </div>

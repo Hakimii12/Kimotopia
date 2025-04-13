@@ -28,7 +28,14 @@ export async function signUp(req,res) {
         })
         Token(newUser._id,res)
         await newUser.save()
-        return res.status(200).json({message:"successfully created new user"}) 
+        return res.status(200).json({message:"successfully created new user",
+            user: {
+                id: newUser._id,
+                name: newUser.name,
+                username: newUser.username,
+                email: newUser.email,
+                createdAt: newUser.createdAt
+            }}) 
     } catch (error) {
        res.status(500).json({message:error.message}) 
     }
@@ -51,7 +58,14 @@ export async function login(req,res){
             return res.status(400).json({message:"invalid credentials"})
         }
         Token(user._id,res)
-        return res.status(200).json({message:"successfully logged in"})
+        return res.status(200).json({message:"successfully logged in",
+            user: {
+                id: user._id,
+                name: user.name,
+                username: user.username,
+                email: user.email,
+                createdAt: user.createdAt
+        }})
 
     } catch (error) {
         res.status(500).json({message:error.message})  

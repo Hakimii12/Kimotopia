@@ -5,7 +5,7 @@ import {toast,ToastContainer} from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom';
 import { FiAtSign, FiEye, FiEyeOff, FiLock } from 'react-icons/fi';
 function Login() {
-  const { dark,auth,setAuth} = useContext(ContextProvider); // Get dark mode from context
+  const { dark,auth,setAuth,setIsAuth} = useContext(ContextProvider); // Get dark mode from context
   const navigate=useNavigate()
   console.log(auth)
   const [username,setUsername]=useState('')
@@ -25,9 +25,11 @@ function Login() {
         })
         .then((res)=>{
             if(res.data.message){
-                toast.success(res.data.message)
+                toast.success(res.data.user)
             }
+            const data=res.data.user
             navigate('/')
+            localStorage.setItem("user-threads",JSON.stringify(data));
         }).catch((err)=>{
            toast.error(err.response.data.message)
            console.log(err.response.data.message)
@@ -102,7 +104,7 @@ function Login() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                logging to an Account...
+                wait...
               </span>
             ) : 'Login'}
           </button>
@@ -112,6 +114,7 @@ function Login() {
           Don&apos;t have an acccount ?{' '}
           <Link to="/signUp" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"
           onClick={()=>{
+             Authenticate
             setAuth('signUp')
             // navigate("/signUp")
           }}

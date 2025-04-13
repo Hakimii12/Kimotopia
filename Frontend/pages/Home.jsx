@@ -1,4 +1,5 @@
 import Logout from "./Logout"
+import Header from "@/Components/Header"
 function Home() {
   return (
     <div>

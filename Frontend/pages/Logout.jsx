@@ -2,21 +2,21 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiLogOut } from 'react-icons/fi';
-
+import { useContext } from 'react';
+import { ContextProvider } from '../ContextApi/ContextApi';
 const Logout = () => {
+  const { dark,setIsAuth} = useContext(ContextProvider)
   const navigate = useNavigate();
-
   const handleLogout = async () => {
     try {
       // Send POST request to logout endpoint
       await axios.post('http://localhost:4000/api/user/logout', {}, {
         withCredentials: true,
       });
-
+       
       // Clear frontend storage
-      localStorage.removeItem('authToken');
+      localStorage.removeItem("user-threads");
       sessionStorage.clear(); // Clear all session storage
-
       // Show success message
       toast.success('Logged out successfully');
 
