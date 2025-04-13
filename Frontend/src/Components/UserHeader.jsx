@@ -1,12 +1,27 @@
 import React from 'react';
-import { FiSettings, FiMessageSquare, FiBookmark } from 'react-icons/fi';
+import { FiSettings, FiMessageSquare, FiBookmark, FiLogOut, FiUser, FiEdit } from 'react-icons/fi';
 import { RiVerifiedBadgeFill } from 'react-icons/ri';
 import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import profile from "../assets/zuck-avatar.png";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function UserHeader() {
-  const { dark, toggleThreads, toggleReplies, threads } = useContext(ContextProvider);
+  const { dark, toggleThreads, toggleReplies, threads, setAuth } = useContext(ContextProvider);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('/api/user/logout', {}, { withCredentials: true });
+      setAuth(null);
+      navigate('/login');
+      toast.success('Logged out successfully');
+    } catch (err) {
+      toast.error('Logout failed');
+    }
+  };
 
   return (
     <div className={`${dark ? 'bg-gray-900' : 'bg-gradient-to-b from-blue-50 to-white'} pb-1 mb-4 overflow-hidden`}>
@@ -28,16 +43,38 @@ function UserHeader() {
         </div>
       </div>
 
-      {/* Profile Actions - Hidden on mobile */}
-      <div className="hidden sm:flex justify-end px-4 sm:px-6 mt-2 space-x-3">
-        <button className={`p-2 rounded-full ${dark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700'}`}>
+      {/* Profile Actions */}
+      <div className="flex justify-end px-4 sm:px-6 mt-2 space-x-3">
+        <button 
+          onClick={() => navigate('/messages')}
+          className={`p-2 rounded-full ${dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          title="Messages"
+        >
           <FiMessageSquare size={18} />
         </button>
-        <button className={`p-2 rounded-full ${dark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700'}`}>
-          <FiBookmark size={18} />
+        
+        <button 
+          onClick={() => navigate('/profile/edit')}
+          className={`p-2 rounded-full ${dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          title="Edit Profile"
+        >
+          <FiEdit size={18} />
         </button>
-        <button className={`p-2 rounded-full ${dark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700'}`}>
+        
+        <button 
+          onClick={() => navigate('/settings')}
+          className={`p-2 rounded-full ${dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          title="Settings"
+        >
           <FiSettings size={18} />
+        </button>
+        
+        <button 
+          onClick={handleLogout}
+          className={`p-2 rounded-full ${dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          title="Logout"
+        >
+          <FiLogOut size={18} />
         </button>
       </div>
 
@@ -61,6 +98,15 @@ function UserHeader() {
             <span className={`${dark ? 'text-gray-400' : 'text-gray-500'} ml-1`}>Following</span>
           </div>
         </div>
+
+        {/* Update Profile Button (Mobile) */}
+        <button
+          onClick={() => navigate('/profile/edit')}
+          className={`sm:hidden w-full mt-4 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2 ${dark ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+        >
+          <FiEdit size={16} />
+          Update Profile
+        </button>
       </div>
 
       {/* Dynamic Tabs */}
