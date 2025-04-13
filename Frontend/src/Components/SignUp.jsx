@@ -1,11 +1,12 @@
 import React, { useState, useContext, use } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { FiUser, FiAtSign, FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { ContextProvider } from '../../ContextApi/ContextApi'; // Import your context
 import axios from 'axios'
 import {toast,ToastContainer} from 'react-toastify'
 function SignUp() {
   const { dark } = useContext(ContextProvider); // Get dark mode from context
+  const navigate = useNavigate()
   const [fullName,setFullName]=useState('')
   const [username,setUsername]=useState('')
   const [email,setEmail]=useState('')
@@ -15,27 +16,42 @@ function SignUp() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData =new FormData();
-    formData.append('name',fullName);
-    formData.append('username',username);
-    formData.append('email',email);
-    formData.append('password',password);
+    // const formData =new FormData();
+    // formData.append('name',fullName);
+    // formData.append('username',username);
+    // formData.append('email',email);
+    // formData.append('password',password);
+  try {
     axios
-        .post("http://localhost:4000/api/user/signUp",formData,{
-            headers:{
-                'Content-Type':'application/json'
-            },
-            withCredentials: true
+    .post("http://localhost:4000/api/user/signUp",{ 
+      name: fullName,
+      username,
+      email,
+      password 
+    },{
+        headers:{
+            'Content-Type':'application/json'
+        },
+        withCredentials: true
+    })
+    .then((response)=>{
+        console.log(response)
+        if(response.data.message){
+            toast.success(response.data.message)
+        }
+        navigate('/')
+    })
+  } catch (error) {
+    ((error)=>{
+          if(error){
+            console.log(error)
+            toast.error(error.response.data.message)
+             console.log(error.response.data.message)
+          }
+
         })
-        .then((res)=>{
-            if(res.data.message){
-                toast.success(res.data.message)
-            }
-            navigate('/')
-        }).catch((err)=>{
-          //  toast.error(err.response.data.message)
-           console.log(err)
-        })
+  }
+
       setIsSubmitting(true);
       setTimeout(() => {
         setIsSubmitting(false);

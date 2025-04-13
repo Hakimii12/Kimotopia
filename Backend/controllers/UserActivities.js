@@ -3,7 +3,9 @@ import User from "../models/userModel.js";
 import Token from '../utlis/jwtAndCookies.js'
 export async function signUp(req,res) {
     try {
+        console.log(req.body)
         const {name,username,email,password}=req.body
+
         if(!name || !username || !email || !password){
              return res.status(400).json({message:"please fill all the fields"})
         }
@@ -14,7 +16,7 @@ export async function signUp(req,res) {
          ]
         });
         if(user){
-           return res.status(400).json({message:"user already exists"})
+           return res.status(409).json({message:"user already exists"})
         }
         const salt =await bcrypt.genSalt(10);
         const hashedPassword =await bcrypt.hash(password,salt)
