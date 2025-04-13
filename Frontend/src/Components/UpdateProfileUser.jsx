@@ -2,9 +2,8 @@ import { useState, useContext, useEffect } from 'react';
 import { FiUser, FiAtSign, FiMail, FiLock, FiEdit, FiCamera } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import { ContextProvider } from '../ContextApi/ContextApi';
-
+import { useNavigate} from 'react-router-dom';
+import { ContextProvider } from '../../ContextApi/ContextApi';
 const  UpdateProfileUser = () => {
   const { dark, auth, setAuth } = useContext(ContextProvider);
   const navigate = useNavigate();
@@ -23,7 +22,7 @@ const  UpdateProfileUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('/api/user/me', { withCredentials: true });
+        const res = await axios.get(`http://localhost:4000/api/user/update`, { withCredentials: true });
         setUser(res.data.user);
       } catch (err) {
         toast.error('Failed to load profile');

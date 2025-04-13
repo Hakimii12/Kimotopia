@@ -30,17 +30,6 @@ function ContextApi({children}) {
     e.stopPropagation(); // Prevents the click event from propagating to the parent <Link>
     setLiked(!liked);
   }
-//   console.log(localStorage);
-//   function Authenticate(){
-//     if(localStorage.length>0){
-//        return true
-//     }
-//     else{
-//       return false
-//     }
-//   }
-// console.log(Authenticate())
-// console.log(localStorage.user-threads)
   const data={
     dark,setDark,
     toggleLight,
