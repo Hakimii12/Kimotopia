@@ -37,6 +37,7 @@ function SignUp() {
         navigate('/')
       const data=response.data.user
       localStorage.setItem("user-threads",JSON.stringify(data));
+      setIsAuth(true)
     }).catch((error)=>{
       return toast.error(error.response.data.message)
     })

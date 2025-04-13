@@ -5,9 +5,8 @@ import {toast,ToastContainer} from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom';
 import { FiAtSign, FiEye, FiEyeOff, FiLock } from 'react-icons/fi';
 function Login() {
-  const { dark,auth,setAuth,setIsAuth} = useContext(ContextProvider); // Get dark mode from context
+  const { dark,setIsAuth} = useContext(ContextProvider); // Get dark mode from context
   const navigate=useNavigate()
-  console.log(auth)
   const [username,setUsername]=useState('')
   const [password,setPassword]=useState('')
   const [errors, setErrors] = useState({});
@@ -24,12 +23,14 @@ function Login() {
             withCredentials: true
         })
         .then((res)=>{
+            navigate('/')
             if(res.data.message){
-                toast.success(res.data.user)
+                toast.success(res.data.message)
+                
             }
             const data=res.data.user
-            navigate('/')
             localStorage.setItem("user-threads",JSON.stringify(data));
+            setIsAuth(true)
         }).catch((err)=>{
            toast.error(err.response.data.message)
            console.log(err.response.data.message)
@@ -112,13 +113,7 @@ function Login() {
 
         <div className={`mt-6 text-center ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
           Don&apos;t have an acccount ?{' '}
-          <Link to="/signUp" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"
-          onClick={()=>{
-             Authenticate
-            setAuth('signUp')
-            // navigate("/signUp")
-          }}
-          >
+          <Link to="/signUp" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors">
             Sign up
           </Link>
         </div>

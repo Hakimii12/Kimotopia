@@ -17,6 +17,7 @@ const Logout = () => {
       // Clear frontend storage
       localStorage.removeItem("user-threads");
       sessionStorage.clear(); // Clear all session storage
+      setIsAuth(false)
       // Show success message
       toast.success('Logged out successfully');
 
