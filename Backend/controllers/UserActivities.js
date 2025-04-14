@@ -4,9 +4,7 @@ import Token from '../utlis/jwtAndCookies.js'
 import cloudinary from "../database/Cloudinary.js";
 export async function signUp(req,res) {
     try {
-        console.log(req.body)
         const {name,username,email,password}=req.body
-
         if(!name || !username || !email || !password){
              return res.status(400).json({message:"please fill all the fields"})
         }
@@ -131,9 +129,9 @@ export async function update(req,res){
                 user.password=hashedPassword
             }
             if(req.file){
-                console.log(req.file)
                 const result =await cloudinary.uploader.upload(req.file.path)
                 if (user.profilepic) {
+                    console.log(user.profilepic)
                     const oldPublicId = user.profilepic.split('/').slice(-2).join('/').split
                     await cloudinary.uploader.destroy(oldPublicId);
                 }

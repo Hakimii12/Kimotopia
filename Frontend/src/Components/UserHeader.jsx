@@ -79,7 +79,7 @@ function UserHeader() {
       <div className="relative h-40 bg-gradient-to-r from-purple-500 to-blue-600">
         <div className="absolute -bottom-12 left-4 flex items-end">
           <img 
-            src={myData.profilepic?myData.profilepic:defaultAvatar} 
+            src={myData.profilepic ? myData.profilepic:defaultAvatar} 
             className="rounded-full border-4 border-white dark:border-gray-900 w-20 h-20 sm:w-24 sm:h-24 object-cover shadow-lg" 
             alt="Profile"
           />
