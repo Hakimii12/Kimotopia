@@ -115,7 +115,10 @@ export async function followUnfollow(req,res){
 }
 export async function update(req,res){
     try {
-           const {name,username,password,bio,profilepic,email}=req.body
+           console.log(req.body)
+           console.log(req.file)
+           const {name,username,password,bio,email}=req.body
+           const profilepic=req.file.filename
            const user=await User.findById(req.user._id)
             if(req.params.id!==req.user._id.toString()){
                 return res.status(400).json({messsage:"you cannot update other profile"})
@@ -141,7 +144,7 @@ export async function update(req,res){
     
 }
 export async function getUser(req,res){
-    const username=req.params.username
+    const {username}=req.params
     const user=await User.findOne({ username: username }).select("-password")
     if(!user){
         return res.status(400).json({message:"user not found"})

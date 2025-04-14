@@ -1,14 +1,14 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { FiUser, FiAtSign, FiMail, FiLock, FiEdit, FiCamera } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import defaultAvatar from '../assets/default-avatar.png';
-
 const UpdateProfileUser = () => {
   const { dark, auth, setAuth } = useContext(ContextProvider);
   const user = JSON.parse(localStorage.getItem("user-threads"));
+  console.log(user)
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [profilepic, setprofilepic] = useState(null);
@@ -17,16 +17,29 @@ const UpdateProfileUser = () => {
   const [bio, setBio] = useState(user?.bio || '');
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
-
+ async function prievData() {
+  const res=await axios.get(`http://localhost:4000/api/user/profile/a.hakimi`)
+      console.log(res)
+ }
+ useEffect(()=>{
+ prievData()
+ },[])
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    const formdata=new FormData()
+    formdata.append('profilepic',profilepic)
+    formdata.append('name',name)
+    formdata.append('username',username)
+    formdata.append('bio',bio)
+    formdata.append('email',email)
+    formdata.append('password',password)
     try {
       const res = await axios.put(`http://localhost:4000/api/user/update/${user.id}`, 
-        { name, username, profilepic, bio, password, email }, 
+        formdata, 
         {
           withCredentials: true,
-          headers: { 'Content-Type': 'application/json' }
+          headers: {'Content-Type': 'multipart/form-data' }
         }
       );
       toast.success('Profile updated successfully');
