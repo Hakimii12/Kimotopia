@@ -2,7 +2,6 @@ import express from 'express'
 import dotenv from 'dotenv'
 import Database from './database/database.js'
 import cors from "cors"
-import multer from 'multer'
 import userModel from './models/userModel.js'
 import postModel from './models/postModel.js'
 import cookieParser from 'cookie-parser'

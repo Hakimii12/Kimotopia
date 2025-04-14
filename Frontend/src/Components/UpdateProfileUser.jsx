@@ -18,8 +18,11 @@ const UpdateProfileUser = () => {
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
  async function prievData() {
-  const res=await axios.get(`http://localhost:4000/api/user/profile/a.hakimi`)
-      console.log(res)
+  const res=await axios.get(`http://localhost:4000/api/user/profile/${user.username}`,
+    { withCredentials: true }
+  )
+    setprofilepic(res.data.profilepic)
+    console.log((res.data.profilepic))
  }
  useEffect(()=>{
  prievData()
@@ -71,7 +74,7 @@ const UpdateProfileUser = () => {
             <div className="flex justify-center">
               <div className="relative group">
                 <img 
-                  src={profilepic ? URL.createObjectURL(profilepic) : (user?.profilepic || defaultAvatar)} 
+                  src={profilepic ? profilepic : defaultAvatar} 
                   alt="Profile" 
                   className="w-24 h-24 rounded-full object-cover border-4 border-gray-300 group-hover:opacity-75 transition-opacity"
                 />
