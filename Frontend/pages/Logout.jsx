@@ -13,7 +13,6 @@ const Logout = () => {
       await axios.post('http://localhost:4000/api/user/logout', {}, {
         withCredentials: true,
       });
-       
       // Clear frontend storage
       localStorage.removeItem("user-threads");
       sessionStorage.clear(); // Clear all session storage
@@ -36,7 +35,6 @@ const Logout = () => {
       className="flex items-center gap-2 px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
     >
       <FiLogOut className="text-lg" />
-      <span>Log Out</span>
     </button>
   );
 };

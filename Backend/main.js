@@ -5,6 +5,7 @@ import cors from "cors"
 import userModel from './models/userModel.js'
 import postModel from './models/postModel.js'
 import cookieParser from 'cookie-parser'
+import cloudinary from './database/Cloudinary.js'
 import userRouter from './routes/userRoutes.js'
 import postRouter from './routes/postRoutes.js'
 const app=express()
@@ -19,6 +20,8 @@ app.use(cors({
   }));
 //initializing database
 Database()
+//cloudinary
+cloudinary
 //initializing model
 userModel
 postModel

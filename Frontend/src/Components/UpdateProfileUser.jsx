@@ -2,13 +2,12 @@ import { useState, useContext, useEffect } from 'react';
 import { FiUser, FiAtSign, FiMail, FiLock, FiEdit, FiCamera } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import defaultAvatar from '../assets/default-avatar.png';
 const UpdateProfileUser = () => {
   const { dark, auth, setAuth } = useContext(ContextProvider);
   const user = JSON.parse(localStorage.getItem("user-threads"));
-  console.log(user)
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [profilepic, setprofilepic] = useState(null);
@@ -44,7 +43,10 @@ const UpdateProfileUser = () => {
           withCredentials: true,
           headers: {'Content-Type': 'multipart/form-data' }
         }
+      
       );
+      const data=res.data.user
+      localStorage.setItem("user-threads",JSON.stringify(data));
       toast.success('Profile updated successfully');
       navigate('/profile');
     } catch (err) {

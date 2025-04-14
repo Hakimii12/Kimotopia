@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiSettings, FiMessageSquare, FiLogOut, FiUser, FiEdit, FiMoreVertical } from 'react-icons/fi';
 import { RiVerifiedBadgeFill } from 'react-icons/ri';
 import { useContext } from 'react';
@@ -7,39 +7,80 @@ import profile from "../assets/zuck-avatar.png";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import defaultAvatar from '../assets/default-avatar.png';
 function UserHeader() {
-  const { dark, toggleThreads, toggleReplies, threads, setAuth } = useContext(ContextProvider);
+  const { dark, toggleThreads, toggleReplies, threads, setIsAuth } = useContext(ContextProvider);
+  const user = JSON.parse(localStorage.getItem("user-threads"));
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isLoading,setIsLoading]=useState(false)
+  const [myData,setmyData]=useState({
+    followers: [],
+    following: [],
+    bio: '',
+    name: '',
+    username: '',
+    profilepic: ''
+  })
+  async function userData(){
+    try {
+      setIsLoading(true)
+      const res = await axios.get(`http://localhost:4000/api/user/profile/${user.username}`,{withCredentials: true})
+      console.log(res)
+      setmyData(res.data)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  useEffect(()=>{
+    userData()
+  },[])
 
   const handleLogout = async () => {
     try {
-      await axios.post('/api/user/logout', {}, { withCredentials: true });
-      setAuth(null);
-      navigate('/login');
+      // Send POST request to logout endpoint
+      await axios.post('http://localhost:4000/api/user/logout', {}, {
+        withCredentials: true,
+      });
+       
+      // Clear frontend storage
+      localStorage.removeItem("user-threads");
+      sessionStorage.clear(); // Clear all session storage
+      setIsAuth(false)
+      // Show success message
       toast.success('Logged out successfully');
-    } catch (err) {
-      toast.error('Logout failed');
+
+      // Redirect to login page after a brief delay
+      setTimeout(() => navigate('/login'), 1000);
+      
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error(error.response?.data?.message || 'Logout failed. Please try again.');
     }
   };
-
+  if (isLoading) return (
+    <div className={`flex justify-center items-center min-h-screen ${dark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
   return (
     <div className={`${dark ? 'bg-gray-900' : 'bg-gradient-to-b from-blue-50 to-white'} pb-1 mb-4 overflow-hidden`}>
       {/* Cover Photo + Profile */}
       <div className="relative h-40 bg-gradient-to-r from-purple-500 to-blue-600">
         <div className="absolute -bottom-12 left-4 flex items-end">
           <img 
-            src={profile} 
+            src={myData.profilepic || defaultAvatar} 
             className="rounded-full border-4 border-white dark:border-gray-900 w-24 h-24 object-cover shadow-lg" 
             alt="Profile"
           />
           <div className={`ml-3 mb-1 ${dark ? 'text-white' : 'text-black'}`}>
             <div className="flex items-center">
-              <h1 className="text-xl font-bold truncate max-w-[150px]">Mark Zuckerberg</h1>
+              <h1 className="text-xl font-bold truncate max-w-[150px]">{myData.name}</h1>
               <RiVerifiedBadgeFill className="ml-1 text-blue-400 text-lg" />
             </div>
-            <p className={dark ? 'text-white/90 text-sm' : 'text-black/90 text-sm'}>@zuckerberg</p>
+            <p className={dark ? 'text-white/90 text-sm' : 'text-black/90 text-sm'}>@{myData.username}</p>
           </div>
         </div>
       </div>
@@ -121,20 +162,20 @@ function UserHeader() {
       {/* Profile Info */}
       <div className="px-4 mt-14 mb-4">
         <p className={`${dark ? 'text-gray-300' : 'text-gray-700'} text-sm`}>
-          Building the future of connection at Meta. Passionate about technology, entrepreneurship, and philanthropy.
+          {myData.bio}
         </p>
         
         <div className="flex mt-3 space-x-4 overflow-x-auto py-2">
           <div className="flex-shrink-0">
-            <span className={`font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>1,234</span>
+            <span className={`font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>2</span>
             <span className={`${dark ? 'text-gray-400' : 'text-gray-500'} ml-1`}>Posts</span>
           </div>
           <div className="flex-shrink-0">
-            <span className={`font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>5.6M</span>
+            <span className={`font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>{myData?.followers.length}</span>
             <span className={`${dark ? 'text-gray-400' : 'text-gray-500'} ml-1`}>Followers</span>
           </div>
           <div className="flex-shrink-0">
-            <span className={`font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>128</span>
+            <span className={`font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>{myData?.following.length}</span>
             <span className={`${dark ? 'text-gray-400' : 'text-gray-500'} ml-1`}>Following</span>
           </div>
         </div>

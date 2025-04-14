@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 import Token from '../utlis/jwtAndCookies.js'
+import cloudinary from "../database/Cloudinary.js";
 export async function signUp(req,res) {
     try {
         console.log(req.body)
@@ -115,10 +116,8 @@ export async function followUnfollow(req,res){
 }
 export async function update(req,res){
     try {
-           console.log(req.body)
-           console.log(req.file)
+       
            const {name,username,password,bio,email}=req.body
-           const profilepic=req.file.filename
            const user=await User.findById(req.user._id)
             if(req.params.id!==req.user._id.toString()){
                 return res.status(400).json({messsage:"you cannot update other profile"})
@@ -131,13 +130,29 @@ export async function update(req,res){
                 const hashedPassword=await bcrypt.hash(password,salt)
                 user.password=hashedPassword
             }
+            if(req.file){
+                console.log(req.file)
+                const result =await cloudinary.uploader.upload(req.file.path)
+                if (user.profilepic) {
+                    const oldPublicId = user.profilepic.split('/').slice(-2).join('/').split
+                    await cloudinary.uploader.destroy(oldPublicId);
+                }
+                user.profilepic = result.secure_url
+            }else{
+                user.profilepic=user.profilepic
+            }
             user.name=name || user.name
             user.username=username || user.username
             user.bio=bio || user.bio
-            user.profilepic = profilepic || user.profilepic
             user.email =email || user.email
             await user.save()
-            res.status(200).json({message:`successfully updated`})
+            res.status(200).json({message:`successfully updated`,user: {
+                id: user._id,
+                name: user.name,
+                username: user.username,
+                email: user.email,
+                createdAt: user.createdAt
+        }})
     } catch (error) {
         res.status(500).json({message:error.message}) 
     }

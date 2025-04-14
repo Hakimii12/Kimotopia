@@ -30,7 +30,6 @@ function SignUp() {
         withCredentials: true
     })
     .then((response)=>{
-        console.log(response)
         if(response.data.message){
             toast.success(response.data.message)
         }
