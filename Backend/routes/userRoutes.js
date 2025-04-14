@@ -6,7 +6,7 @@ router.post('/signUp',signUp)
 router.post('/login',login)
 router.post('/logout',logout)
 router.post('/followunfollow/:id',Authorization,followUnfollow)
-router.post('/update/:id',Authorization,update)
+router.put('/update/:id',Authorization,update)
 router.get('/profile/:username',Authorization, getUser)
 
 export default router

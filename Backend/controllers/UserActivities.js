@@ -121,7 +121,7 @@ export async function update(req,res){
                 return res.status(400).json({messsage:"you cannot update other profile"})
             }
             if(!user){
-                return res.status(400).json({message:"user not found"})
+                return res.status(404).json({message:"user not found"})
             }
             if(password){
                 const salt =await bcrypt.genSalt(10);

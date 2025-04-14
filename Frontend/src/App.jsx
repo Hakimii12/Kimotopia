@@ -68,7 +68,7 @@ function App() {
   />
         <Routes>
           <Route path='/' element={isAuth?<Home/>:<Navigate to="/login" />}/>
-          <Route path='/update' element={<UpdateProfile/>}/>
+          <Route path='/update' element={isAuth?<UpdateProfile/>:<Navigate to="/login" />}/>
           <Route path='/login' element={<Authentication/>}/>
           <Route path='/signUp' element={<Authentication/>}/>
           <Route path='/:username' element={isAuth? <UserPage /> : <Navigate to="/login"/>} />

@@ -1,187 +1,191 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { FiUser, FiAtSign, FiMail, FiLock, FiEdit, FiCamera } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ContextProvider } from '../../ContextApi/ContextApi';
-const  UpdateProfileUser = () => {
+import defaultAvatar from '../assets/default-avatar.png';
+
+const UpdateProfileUser = () => {
   const { dark, auth, setAuth } = useContext(ContextProvider);
+  const user = JSON.parse(localStorage.getItem("user-threads"));
   const navigate = useNavigate();
-  const [user, setUser] = useState({
-    name: '',
-    username: '',
-    email: '',
-    password: '',
-    bio: '',
-    profilePic: ''
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Fetch user data
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(`http://localhost:4000/api/user/update`, { withCredentials: true });
-        setUser(res.data.user);
-      } catch (err) {
-        toast.error('Failed to load profile');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
-
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setUser({ ...user, profilePic: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [profilepic, setprofilepic] = useState(null);
+  const [name, setName] = useState(user?.name || '');
+  const [username, setUsername] = useState(user?.username || '');
+  const [bio, setBio] = useState(user?.bio || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
-      const res = await axios.put('/api/user/update', user, {
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const res = await axios.put(`http://localhost:4000/api/user/update/${user.id}`, 
+        { name, username, profilepic, bio, password, email }, 
+        {
+          withCredentials: true,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
       toast.success('Profile updated successfully');
-      setAuth({ ...auth, user: res.data.user }); // Update context
       navigate('/profile');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Update failed');
+      toast.error('Update failed');
+      console.error(err)
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (isLoading) return <div className="flex justify-center py-8">Loading...</div>;
+  if (isLoading) return (
+    <div className={`flex justify-center items-center min-h-screen ${dark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
 
   return (
     <div className={`min-h-screen py-8 ${dark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
-      <div className={`max-w-md mx-auto p-6 rounded-lg shadow-lg ${dark ? 'bg-gray-800' : 'bg-white'}`}>
-        <h1 className="text-2xl font-bold mb-6 text-center">Edit Profile</h1>
-        
-        {/* Profile Picture */}
-        <div className="flex justify-center mb-6">
-          <div className="relative">
-            <img 
-              src={user.profilePic || '/default-avatar.png'} 
-              alt="Profile" 
-              className="w-24 h-24 rounded-full object-cover border-2 border-blue-500"
-            />
-            <label className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer">
-              <FiCamera size={16} />
-              <input 
-                type="file" 
-                accept="image/*"
-                onChange={handleProfilePicChange}
-                className="hidden"
+      <div className="max-w-md mx-auto px-4">
+        <div className={`rounded-xl shadow-lg overflow-hidden ${dark ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`py-4 px-6 ${dark ? 'bg-gray-700' : 'bg-gray-100'}`}>
+            <h1 className="text-2xl font-bold text-center">Edit Profile</h1>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            {/* Profile Picture Upload */}
+            <div className="flex justify-center">
+              <div className="relative group">
+                <img 
+                  src={profilepic ? URL.createObjectURL(profilepic) : (user?.profilepic || defaultAvatar)} 
+                  alt="Profile" 
+                  className="w-24 h-24 rounded-full object-cover border-4 border-gray-300 group-hover:opacity-75 transition-opacity"
+                />
+                <label 
+                  htmlFor="image" 
+                  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                >
+                  <FiCamera className="text-white text-xl" />
+                </label>
+                <input 
+                  type="file" 
+                  id="image" 
+                  hidden 
+                  accept="image/*"
+                  onChange={(e) => setprofilepic(e.target.files[0])}
+                />
+              </div>
+            </div>
+
+            {/* Name Field */}
+            <div className="space-y-2">
+              <label htmlFor="name" className="flex items-center text-sm font-medium">
+                <FiUser className="mr-2" /> Full Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 ${dark ? 
+                  'bg-gray-700 border-gray-600 focus:ring-blue-500' : 
+                  'bg-white border-gray-300 focus:ring-blue-400'}`}
+                placeholder="Enter your name"
               />
-            </label>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name */}
-          <div className="relative">
-            <div className={`absolute inset-y-0 left-0 pl-3 flex items-center ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
-              <FiUser />
             </div>
-            <input
-              type="text"
-              name="name"
-              value={user.name}
-              onChange={handleChange}
-              placeholder="Full Name"
-              className={`w-full pl-10 pr-4 py-2 rounded-lg border ${dark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
-          </div>
 
-          {/* Username */}
-          <div className="relative">
-            <div className={`absolute inset-y-0 left-0 pl-3 flex items-center ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
-              <FiAtSign />
+            {/* Username Field */}
+            <div className="space-y-2">
+              <label htmlFor="username" className="flex items-center text-sm font-medium">
+                <FiAtSign className="mr-2" /> Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 ${dark ? 
+                  'bg-gray-700 border-gray-600 focus:ring-blue-500' : 
+                  'bg-white border-gray-300 focus:ring-blue-400'}`}
+                placeholder="Enter username"
+              />
             </div>
-            <input
-              type="text"
-              name="username"
-              value={user.username}
-              onChange={handleChange}
-              placeholder="Username"
-              className={`w-full pl-10 pr-4 py-2 rounded-lg border ${dark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
-          </div>
 
-          {/* Email */}
-          <div className="relative">
-            <div className={`absolute inset-y-0 left-0 pl-3 flex items-center ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
-              <FiMail />
+            {/* Bio Field */}
+            <div className="space-y-2">
+              <label htmlFor="bio" className="flex items-center text-sm font-medium">
+                <FiEdit className="mr-2" /> Bio
+              </label>
+              <textarea
+                id="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 ${dark ? 
+                  'bg-gray-700 border-gray-600 focus:ring-blue-500' : 
+                  'bg-white border-gray-300 focus:ring-blue-400'}`}
+                placeholder="Tell us about yourself"
+                rows="3"
+              />
             </div>
-            <input
-              type="email"
-              name="email"
-              value={user.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className={`w-full pl-10 pr-4 py-2 rounded-lg border ${dark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
-          </div>
 
-          {/* Password */}
-          <div className="relative">
-            <div className={`absolute inset-y-0 left-0 pl-3 flex items-center ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
-              <FiLock />
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="flex items-center text-sm font-medium">
+                <FiMail className="mr-2" /> Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 ${dark ? 
+                  'bg-gray-700 border-gray-600 focus:ring-blue-500' : 
+                  'bg-white border-gray-300 focus:ring-blue-400'}`}
+                placeholder="Enter your email"
+              />
             </div>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={user.password}
-              onChange={handleChange}
-              placeholder="New Password (leave blank to keep current)"
-              className={`w-full pl-10 pr-10 py-2 rounded-lg border ${dark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
+
+            {/* Password Field */}
+            <div className="space-y-2">
+              <label htmlFor="password" className="flex items-center text-sm font-medium">
+                <FiLock className="mr-2" /> New Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 ${dark ? 
+                  'bg-gray-700 border-gray-600 focus:ring-blue-500' : 
+                  'bg-white border-gray-300 focus:ring-blue-400'}`}
+                placeholder="Enter new password (leave blank to keep current)"
+              />
+            </div>
+
+            {/* Submit Button */}
             <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className={`absolute inset-y-0 right-0 pr-3 flex items-center ${dark ? 'text-gray-400' : 'text-gray-500'}`}
+              type="submit"
+              disabled={isLoading}
+              className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${dark ? 
+                'bg-blue-600 hover:bg-blue-700 text-white' : 
+                'bg-blue-500 hover:bg-blue-600 text-white'} flex items-center justify-center`}
             >
-              {showPassword ? 'Hide' : 'Show'}
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Updating...
+                </>
+              ) : 'Update Profile'}
             </button>
-          </div>
-
-          {/* Bio */}
-          <div>
-            <textarea
-              name="bio"
-              value={user.bio}
-              onChange={handleChange}
-              placeholder="Tell us about yourself..."
-              rows="3"
-              className={`w-full px-4 py-2 rounded-lg border ${dark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-          >
-            <FiEdit />
-            Update Profile
-          </button>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
 };
 
-export default  UpdateProfileUser;
+export default UpdateProfileUser;
