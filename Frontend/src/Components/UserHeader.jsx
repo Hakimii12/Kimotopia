@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiSettings, FiMessageSquare, FiLogOut, FiUser, FiEdit, FiMoreVertical } from 'react-icons/fi';
+import { FiSettings, FiMessageSquare, FiLogOut, FiUser, FiEdit, FiMoreVertical, FiUserPlus } from 'react-icons/fi';
 import { RiVerifiedBadgeFill } from 'react-icons/ri';
 import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import defaultAvatar from '../assets/default-avatar.png';
+
 function UserHeader(params) {
   const {data}=params
   const {username}=useParams()
@@ -15,6 +16,7 @@ function UserHeader(params) {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [followUnfullow,setfollowUnfullow]=useState(user.id.toString() == data._id.toString())
   const [myData, setmyData] = useState({
     followers: [],
     following: [],
@@ -27,7 +29,6 @@ function UserHeader(params) {
   async function userData() {
     try {
       setIsLoading(true);
-      // const res = await axios.get(`http://localhost:4000/api/user/profile/${username}`, { withCredentials: true });
       setmyData({
         followers: data.followers || [],
         following: data.following || [],
@@ -49,8 +50,9 @@ function UserHeader(params) {
     } else {
       navigate('/login');
     }
+    
   }, []);
-
+  
   const handleLogout = async () => {
     try {
       await axios.post('http://localhost:4000/api/user/logout', {}, {
@@ -93,7 +95,7 @@ function UserHeader(params) {
         </div>
       </div>
 
-      {/* Profile Actions - Fixed Mobile Layout */}
+      {/* Profile Actions */}
       <div className="flex justify-end items-center sm:px-4 pr-1 mt-2">
         <div className="flex space-x-3 min-w-[100px] justify-end">
           <button 
@@ -104,73 +106,81 @@ function UserHeader(params) {
             <FiMessageSquare className="text-lg" />
           </button>
           
-          <div className="relative">
+          {followUnfullow ? (
+            <div className="relative">
+              <button 
+                onClick={() => setShowDropdown(!showDropdown)}
+                className={`p-2 rounded-full ${dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                title="More options"
+              >
+                <FiMoreVertical className="text-lg" />
+              </button>
+              
+              {showDropdown && (
+                <div className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 z-10 ${dark ? 'bg-gray-800' : 'bg-white'} ring-1 ring-black ring-opacity-5`}>
+                  <button
+                    onClick={() => {
+                      navigate('/update');
+                      setShowDropdown(false);
+                    }}
+                    className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                  >
+                    <div className="flex items-center">
+                      <FiEdit className="mr-2" size={14} />
+                      Update Profile
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/settings');
+                      setShowDropdown(false);
+                    }}
+                    className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                  >
+                    <div className="flex items-center">
+                      <FiSettings className="mr-2" size={14} />
+                      Settings
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/profile');
+                      setShowDropdown(false);
+                    }}
+                    className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                  >
+                    <div className="flex items-center">
+                      <FiUser className="mr-2" size={14} />
+                      View Profile
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setShowDropdown(false);
+                    }}
+                    className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                  >
+                    <div className="flex items-center">
+                      <FiLogOut className="mr-2" size={14} />
+                      Logout
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
             <button 
-              onClick={() => setShowDropdown(!showDropdown)}
               className={`p-2 rounded-full ${dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
-              title="More options"
+              title="Follow"
             >
-              <FiMoreVertical className="text-lg" />
+              <FiUserPlus className="text-lg" />
             </button>
-            
-            {showDropdown && (
-              <div className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 z-10 ${dark ? 'bg-gray-800' : 'bg-white'} ring-1 ring-black ring-opacity-5`}>
-                {/* Dropdown items remain the same */}
-                <button
-                  onClick={() => {
-                    navigate('/update');
-                    setShowDropdown(false);
-                  }}
-                  className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
-                >
-                  <div className="flex items-center">
-                    <FiEdit className="mr-2" size={14} />
-                    Update Profile
-                  </div>
-                </button>
-                <button
-                  onClick={() => {
-                    navigate('/settings');
-                    setShowDropdown(false);
-                  }}
-                  className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
-                >
-                  <div className="flex items-center">
-                    <FiSettings className="mr-2" size={14} />
-                    Settings
-                  </div>
-                </button>
-                <button
-                  onClick={() => {
-                    navigate('/profile');
-                    setShowDropdown(false);
-                  }}
-                  className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
-                >
-                  <div className="flex items-center">
-                    <FiUser className="mr-2" size={14} />
-                    View Profile
-                  </div>
-                </button>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setShowDropdown(false);
-                  }}
-                  className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
-                >
-                  <div className="flex items-center">
-                    <FiLogOut className="mr-2" size={14} />
-                    Logout
-                  </div>
-                </button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
-      {/* Rest of your component remains the same */}
+      {/* Bio and Stats */}
       <div className="px-4 mt-14 mb-4">
         <p className={`${dark ? 'text-gray-300' : 'text-gray-700'} text-sm`}>
           {myData.bio}
@@ -192,6 +202,7 @@ function UserHeader(params) {
         </div>
       </div>
 
+      {/* Tabs */}
       <div className="flex border-b" style={{ borderColor: dark ? '#374151' : '#e5e7eb' }}>
         <button
           onClick={toggleThreads}
