@@ -48,7 +48,7 @@ const UpdateProfileUser = () => {
       const data=res.data.user
       localStorage.setItem("user-threads",JSON.stringify(data));
       toast.success('Profile updated successfully');
-      navigate('/profile');
+      navigate(`/${username}`);
     } catch (err) {
       toast.error('Update failed');
       console.error(err)
