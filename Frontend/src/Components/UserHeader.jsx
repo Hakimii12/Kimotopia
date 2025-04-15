@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { FiSettings, FiMessageSquare, FiLogOut, FiUser, FiEdit, FiMoreVertical, FiUserPlus } from 'react-icons/fi';
+import { 
+  FiSettings, 
+  FiMessageSquare, 
+  FiLogOut, 
+  FiUser, 
+  FiEdit, 
+  FiMoreVertical, 
+  FiUserPlus,
+  FiUserCheck 
+} from 'react-icons/fi';
 import { RiVerifiedBadgeFill } from 'react-icons/ri';
 import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
@@ -9,14 +18,16 @@ import { toast } from 'react-toastify';
 import defaultAvatar from '../assets/default-avatar.png';
 
 function UserHeader(params) {
-  const {data}=params
-  const {username}=useParams()
+  const {data} = params;
+  const id=data._id
+  const {username} = useParams();
   const { dark, toggleThreads, toggleReplies, threads, setIsAuth } = useContext(ContextProvider);
   const user = JSON.parse(localStorage.getItem("user-threads"));
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [followUnfullow,setfollowUnfullow]=useState(user.id.toString() == data._id.toString())
+  const [isFollowing, setIsFollowing] = useState(data?.followers?.includes(user?.id));
+  const [followUnfullow, setfollowUnfullow] = useState(user?.id.toString() === data?._id.toString());
   const [myData, setmyData] = useState({
     followers: [],
     following: [],
@@ -25,7 +36,6 @@ function UserHeader(params) {
     username: '',
     profilepic: ''
   });
-
   async function userData() {
     try {
       setIsLoading(true);
@@ -36,9 +46,9 @@ function UserHeader(params) {
         name: data.name || '',
         username: data.username || '',
         profilepic: data.profilepic || defaultAvatar
-        
-      })
+      });
     } catch (error) {
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -50,9 +60,34 @@ function UserHeader(params) {
     } else {
       navigate('/login');
     }
-    
   }, []);
-  
+
+  const toggleFollow = async () => {
+    try {
+      const response = await axios.post(`http://localhost:4000/api/user/followunfollow/${id}`, {id}, {
+        withCredentials: true,
+      });
+      
+      const newFollowingStatus = !isFollowing;
+      setIsFollowing(newFollowingStatus);
+      
+      setmyData(prev => ({
+        ...prev,
+        followers: newFollowingStatus 
+          ? [...prev.followers, user.id]
+          : prev.followers.filter(followerId => followerId !== user.id)
+      }));
+      
+      toast.success(newFollowingStatus 
+        ? `You are now following ${data.name}`
+        : `You unfollowed ${data.name}`
+      );
+    } catch (error) {
+      console.error('Follow/unfollow failed:', error);
+      toast.error(error.response?.data?.message || 'Failed to update follow status');
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await axios.post('http://localhost:4000/api/user/logout', {}, {
@@ -76,12 +111,12 @@ function UserHeader(params) {
   );
 
   return (
-    <div className={`${dark ? 'bg-gray-900' : 'bg-gradient-to-b from-blue-50 to-white'} pb-1 mb-4 overflow-hidden `}>
+    <div className={`${dark ? 'bg-gray-900' : 'bg-gradient-to-b from-blue-50 to-white'} pb-1 mb-4 overflow-hidden`}>
       {/* Cover Photo + Profile */}
       <div className="relative h-40 bg-gradient-to-r from-purple-500 to-blue-600">
         <div className="absolute -bottom-12 left-4 flex items-end">
           <img 
-            src={myData.profilepic ? myData.profilepic:defaultAvatar} 
+            src={myData.profilepic ? myData.profilepic : defaultAvatar} 
             className="rounded-full border-4 border-white dark:border-gray-900 w-20 h-20 sm:w-24 sm:h-24 object-cover shadow-lg" 
             alt="Profile"
           />
@@ -171,10 +206,17 @@ function UserHeader(params) {
             </div>
           ) : (
             <button 
-              className={`p-2 rounded-full ${dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
-              title="Follow"
+              onClick={toggleFollow}
+              className={`p-2 rounded-full ${isFollowing 
+                ? (dark ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-blue-500 hover:bg-blue-600 text-white')
+                : (dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700')}`}
+              title={isFollowing ? "Unfollow" : "Follow"}
             >
-              <FiUserPlus className="text-lg" />
+              {isFollowing ? (
+                <FiUserCheck className="text-lg" />
+              ) : (
+                <FiUserPlus className="text-lg" />
+              )}
             </button>
           )}
         </div>
