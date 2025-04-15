@@ -3,12 +3,13 @@ import { FiSettings, FiMessageSquare, FiLogOut, FiUser, FiEdit, FiMoreVertical }
 import { RiVerifiedBadgeFill } from 'react-icons/ri';
 import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import defaultAvatar from '../assets/default-avatar.png';
-
-function UserHeader() {
+function UserHeader(params) {
+  const {data}=params
+  const {username}=useParams()
   const { dark, toggleThreads, toggleReplies, threads, setIsAuth } = useContext(ContextProvider);
   const user = JSON.parse(localStorage.getItem("user-threads"));
   const navigate = useNavigate();
@@ -26,18 +27,17 @@ function UserHeader() {
   async function userData() {
     try {
       setIsLoading(true);
-      const res = await axios.get(`http://localhost:4000/api/user/profile/${user.username}`, { withCredentials: true });
+      // const res = await axios.get(`http://localhost:4000/api/user/profile/${username}`, { withCredentials: true });
       setmyData({
-        followers: res.data.followers || [],
-        following: res.data.following || [],
-        bio: res.data.bio || '',
-        name: res.data.name || '',
-        username: res.data.username || '',
-        profilepic: res.data.profilepic || defaultAvatar
-      });
+        followers: data.followers || [],
+        following: data.following || [],
+        bio: data.bio || '',
+        name: data.name || '',
+        username: data.username || '',
+        profilepic: data.profilepic || defaultAvatar
+        
+      })
     } catch (error) {
-      console.log(error);
-      toast.error('Failed to load profile data');
     } finally {
       setIsLoading(false);
     }
