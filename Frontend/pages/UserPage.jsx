@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ContextProvider } from '../ContextApi/ContextApi';
+import NotFound from './notFound';
 
 function UserPage() {
   const { dark } = useContext(ContextProvider);
@@ -50,16 +51,7 @@ function UserPage() {
 
   if (userNotFound) {
     return (
-      <div className={`flex flex-col items-center justify-center min-h-screen ${dark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-black'}`}>
-        <h1 className="text-2xl font-bold mb-4">User not found</h1>
-        <p className="mb-6">The username @{username} doesn't exist</p>
-        <button 
-          onClick={() => navigate('/')}
-          className={`px-4 py-2 rounded-lg ${dark ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
-        >
-          Go back home
-        </button>
-      </div>
+      <NotFound/>
     );
   }
   return (

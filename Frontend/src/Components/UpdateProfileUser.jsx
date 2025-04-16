@@ -21,7 +21,6 @@ const UpdateProfileUser = () => {
     { withCredentials: true }
   )
     setprofilepic(res.data.profilepic)
-    console.log((res.data.profilepic))
  }
  useEffect(()=>{
  prievData()

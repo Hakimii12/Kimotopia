@@ -8,6 +8,7 @@ import Authentication from '../pages/authentication'
 import {toast,ToastContainer} from 'react-toastify'
 import Home from '../pages/Home'
 import UpdateProfile from '../pages/UpdateProfile'
+import CreatePost from './Components/CreatePost'
 function App() {
   const { dark,isAuth,} = useContext(ContextProvider)
   return (
@@ -70,6 +71,7 @@ function App() {
           <Route path='/' element={isAuth?<Home/>:<Navigate to="/login" />}/>
           <Route path='/update' element={isAuth?<UpdateProfile/>:<Navigate to="/login" />}/>
           <Route path='/login' element={<Authentication/>}/>
+          <Route path='/post' element={isAuth?<CreatePost/>:<Navigate to="/login" />}/>
           <Route path='/signUp' element={<Authentication/>}/>
           <Route path='/:username' element={isAuth? <UserPage /> : <Navigate to="/login"/>} />
           <Route path='/:username/post/:pid' element={isAuth? <PostPage/> : <Navigate to="/login"/>} />
