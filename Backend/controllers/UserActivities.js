@@ -131,7 +131,6 @@ export async function update(req,res){
             if(req.file){
                 const result =await cloudinary.uploader.upload(req.file.path)
                 if (user.profilepic) {
-                    console.log(user.profilepic)
                     const oldPublicId = user.profilepic.split('/').slice(-2).join('/').split
                     await cloudinary.uploader.destroy(oldPublicId);
                 }

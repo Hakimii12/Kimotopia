@@ -10,38 +10,11 @@ function CreatePost() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [postText, setPostText] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [Image, setImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-
-  const handleTextChange = (e) => {
-    if (e.target.value.length <= 500) {
-      setPostText(e.target.value);
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // Validate image file
-    if (!file.type.match('image.*')) {
-      setError('Please select an image file (JPEG, PNG, GIF)');
-      return;
-    }
-
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setError('Image size should be less than 5MB');
-      return;
-    }
-
-    setError('');
-    setSelectedImage(file);
-  };
-
   const removeImage = () => {
-    setSelectedImage(null);
+    setImage(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -51,7 +24,7 @@ function CreatePost() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (!postText.trim() && !selectedImage) {
+    if (!postText.trim() && !Image) {
       setError('Please add text or an image to post');
       setIsSubmitting(false);
       return;
@@ -60,14 +33,16 @@ function CreatePost() {
     try {
       // Here you would typically upload to your backend
       // For demonstration, we'll just log and navigate back
-      console.log({
-        text: postText,
-        image: selectedImage
-      });
-
       // Simulate API call
-      const res=await axios.post("http://localhost:4000/api/post/create",{text:postText,postedBy},
-        {withCredentials:true}
+      const formdata=new FormData()
+      formdata.append('text',postText)
+      formdata.append('postedBy',postedBy)
+      formdata.append('image',Image)
+      const res=await axios.post("http://localhost:4000/api/post/create",formdata,
+        {
+          withCredentials: true,
+          headers: {'Content-Type': 'multipart/form-data' }
+        }
       )
       console.log(res)
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -181,7 +156,11 @@ function CreatePost() {
             style={textareaStyle}
             placeholder="What's on your mind?"
             value={postText}
-            onChange={handleTextChange}
+            onChange={(e) => {
+              if (e.target.value.length <= 500) {
+                setPostText(e.target.value);
+              }
+            }}
             maxLength="500"
           />
           
@@ -214,22 +193,40 @@ function CreatePost() {
                 fontSize: '14px'
               }}
             >
-              <FiImage /> {selectedImage ? 'Change Image' : 'Add Image'}
+              <FiImage /> {Image ? 'Change Image' : 'Add Image'}
             </button>
             
             <input
               type="file"
               ref={fileInputRef}
-              onChange={handleImageChange}
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+            
+                // Validate image file
+                if (!file.type.match('image.*')) {
+                  setError('Please select an image file (JPEG, PNG, GIF)');
+                  return;
+                }
+            
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                  setError('Image size should be less than 5MB');
+                  return;
+                }
+            
+                setError('');
+                setImage(file);
+              }}
               accept="image/*"
               style={{ display: 'none' }}
             />
           </div>
 
-          {selectedImage && (
+          {Image && (
             <div style={imagePreviewStyle}>
               <img
-                src={URL.createObjectURL(selectedImage)}
+                src={URL.createObjectURL(Image)}
                 alt="Preview"
                 style={{ 
                   width: '100%', 
@@ -251,8 +248,8 @@ function CreatePost() {
 
           <button
             type="submit"
-            style={isSubmitting || (!postText.trim() && !selectedImage) ? disabledButtonStyle : buttonStyle}
-            disabled={isSubmitting || (!postText.trim() && !selectedImage)}
+            style={isSubmitting || (!postText.trim() && !Image) ? disabledButtonStyle : buttonStyle}
+            disabled={isSubmitting || (!postText.trim() && !Image)}
           >
             {isSubmitting ? (
               'Posting...'

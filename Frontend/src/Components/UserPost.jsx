@@ -8,6 +8,7 @@ import verified from "../assets/verified.png";
 import post1 from '../assets/post1.png';
 import axios  from 'axios'
 import Loading from './Loading/Loading';
+import {toast} from 'react-toastify'
 function UserPost(params) {
   const {data}=params
   const userId=data._id
@@ -28,12 +29,11 @@ function UserPost(params) {
         setPostNotFound(true);
         return;
       }
-
       if (res.status !== 200) {
         throw new Error('Failed to fetch user data');
       }
     } catch (error) {
-      setPostNotFound(true);
+      toast("no post ");
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +74,7 @@ function UserPost(params) {
           <div className="flex items-start gap-4 mb-5">
             <div className="relative group">
               <img 
-                src={profile} 
+                src={data.profilepic} 
                 className={`
                   w-12 h-12 rounded-full object-cover
                   border-2 ${theme.border}
@@ -128,13 +128,12 @@ function UserPost(params) {
             ${dark ? 'hover:shadow-gray-800/30' : 'hover:shadow-gray-300/30'}
           `}>
             <img 
-              src={post1} 
+              src={post?.image ? post.image :null} 
               className={`
                 w-full h-auto max-h-96 object-cover
                 transition-transform duration-700 ease-in-out
                 hover:scale-105
               `}
-              alt="Post content"
             />
             <div className={`
               absolute inset-0 bg-gradient-to-t

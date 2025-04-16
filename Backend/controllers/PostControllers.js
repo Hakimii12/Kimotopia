@@ -1,4 +1,5 @@
 import Post from "../models/postModel.js"
+import cloudinary from "../database/Cloudinary.js"
 import User from "../models/userModel.js"
 export async function CreatePost(req,res){
     try {
@@ -16,9 +17,18 @@ export async function CreatePost(req,res){
         if(user._id.toString() !==req.user._id.toString()){
             return res.status(400).json({message:"you are not authorized to post"})
         }
+        async function postimage(){
+            if(req.file){
+                const img=await cloudinary.uploader.upload(req.file.path)
+                const result=img.secure_url
+                return result
+            }
+        }
+        const postImagemage=await postimage()
         const newPost =new Post({
             postedBy:postedBy,
-            text:text
+            text:text,
+            image:postImagemage ||""
         })
         await newPost.save()
         res.status(200).json({message:"successfully creates post"})
