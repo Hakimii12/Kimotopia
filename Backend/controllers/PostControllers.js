@@ -44,6 +44,23 @@ export async function GetPost(req,res) {
         res.status(500).json({message:error.message})
     }
 }
+export async function GetpostedByPost(req,res) {
+    try {
+        const {postedBy}=req.params
+        if(!postedBy){
+            return res.status(404).json({message:"no post"})
+        }
+        const post=await Post.find({postedBy:postedBy})
+        if(!post){
+            return res.status(404).json({message:"post not found"})
+        }
+
+        return res.status(200).json(post)
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+}
 export async function DeletePost(req,res){
     try {
         const {id}=req.params

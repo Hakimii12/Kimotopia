@@ -60,10 +60,7 @@ function UserPage() {
         <UserHeader data={data}/>
       </div>
       <div className='ml-2 mt-6'>
-        <UserPost />
-        <UserPost />
-        <UserPost />
-        <UserPost />
+        <UserPost data={data}/>
       </div>
     </>
   );
