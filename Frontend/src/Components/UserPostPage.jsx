@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import profile from '../assets/zuck-avatar.png';
 import verified from "../assets/verified.png";
-import post1 from '../assets/post1.png';
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import { useContext } from 'react';
 import Comment from './Comment';
@@ -133,7 +131,35 @@ function UserPostPage() {
 
             {/* Comments Section */}
             <div className="px-5 pb-5">
-                <Comment currentUserId={currentUserId} postData={postData}/>
+                {postData?.comment?.length>0 ?(
+                    postData.comment.map((comment)=>{
+                        return(<Comment comment={comment}/>)
+                    })
+                ):(<div className={`flex flex-col items-center justify-center py-10 ${dark ? 'bg-gray-900' : 'bg-white'}`}>
+                <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-4 ${dark ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className={`h-12 w-12 ${dark ? 'text-gray-500' : 'text-gray-400'}`} 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={1.5} 
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" 
+                    />
+                  </svg>
+                </div>
+                <h3 className={`text-xl font-medium mb-1 ${dark ? 'text-white' : 'text-gray-900'}`}>
+                  No comments yet
+                </h3>
+                <p className={`${dark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Be the first to share what you think!
+                </p>
+                           </div>)
+                }  
             </div>
         </div>
     );

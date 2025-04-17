@@ -127,7 +127,7 @@ export async function Reply(req,res){
         const username=req.user.username
         const profilepic=req.user.profilepic
         const userId=req.user._id
-        const userToReply=await User.findById(req.user._id).select("-password")
+        const userToReply=await User.findById(userId).select("-password")
         const post =await Post.findById(id)
         if(!post){
             return res.status(404).json({message:"post not found"})
