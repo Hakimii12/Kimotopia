@@ -7,7 +7,9 @@ import profile from '../assets/zuck-avatar.png';
 import verified from "../assets/verified.png";
 import post1 from '../assets/post1.png';
 
-function Feeds() {
+function Feeds(params) {
+  const {feed}=params
+
   const { toggleLiked, liked, dark } = useContext(ContextProvider);
 
   // Dynamic theme classes
@@ -23,7 +25,8 @@ function Feeds() {
   };
 
   return (
-    <Link to="/:username/post/:pid" className="block transition-transform duration-300 hover:scale-[1.01] active:scale-[0.99]">
+    feeds.map((feed)=>{
+      <Link to="/:username/post/:pid" className="block transition-transform duration-300 hover:scale-[1.01] active:scale-[0.99]">
       <div className={`
         ${theme.bg}
         p-5 mb-6 rounded-2xl
@@ -162,6 +165,8 @@ function Feeds() {
         </div>
       </div>
     </Link>
+    })
+   
   );
 }
 

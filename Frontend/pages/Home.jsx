@@ -2,15 +2,31 @@ import Feeds from "@/Components/Feeds";
 import Logout from "./Logout";
 import { useNavigate } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContextProvider } from "../ContextApi/ContextApi";
+import axios from "axios";
 
 function Home() {
   const { dark } = useContext(ContextProvider);
   const navigate = useNavigate();
+  const [noPost,setnoPost]=useState(false)
+  const [feeds,setFeeds]=useState()
   const handleCreatePost = () => {
     navigate("/Post");
   };
+  async function GetFeeds(){
+    try {
+      const res=await axios.get("http://localhost:4000/api/post/feed",{
+        withCredentials:true
+      })
+      setFeeds(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(()=>{
+    GetFeeds()
+  })
 
   // Color schemes for both dark and light modes
   const colorSchemes = {
@@ -79,14 +95,13 @@ function Home() {
       minHeight: "100vh",
       backgroundColor: dark ? '#0f172a' : '#f8fafc'
     }}>
-      <Logout />
+      {/* {horizontal scrollable } */}
+      {feeds?.map((feed,index)=>(
+          <div style={{ paddingBottom: "80px" }}>
+          <Feeds key={index} feed={feed} />
+        </div>
+      ))}
       
-      <div style={{ paddingBottom: "80px" }}>
-        <Feeds />
-        <Feeds />
-        <Feeds />
-        <Feeds />
-      </div>
 
       {/* Adaptive Floating Action Button */}
       <button
