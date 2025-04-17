@@ -159,7 +159,7 @@ export async function getUser(req,res){
     const {username}=req.params
     const user=await User.findOne({ username: username }).select("-password")
     if(!user){
-        return res.status(400).json({message:"user not found"})
+        return res.status(404).json({message:"user not found"})
     }
     return res.status(200).json(user)
     

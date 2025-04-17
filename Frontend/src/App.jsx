@@ -74,7 +74,7 @@ function App() {
           <Route path='/post' element={isAuth?<CreatePost/>:<Navigate to="/login" />}/>
           <Route path='/signUp' element={<Authentication/>}/>
           <Route path='/:username' element={isAuth? <UserPage /> : <Navigate to="/login"/>} />
-          <Route path='/:username/post/:pid' element={isAuth? <PostPage/> : <Navigate to="/login"/>} />
+          <Route path='/:username/post/:pId' element={isAuth? <PostPage/> : <Navigate to="/login"/>} />
         </Routes>
       </div>
     </div>
