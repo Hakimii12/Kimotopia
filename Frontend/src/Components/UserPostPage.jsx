@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import verified from "../assets/verified.png";
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import { useContext } from 'react';
 import Comment from './Comment';
-import { FiMoreHorizontal, FiHeart, FiMessageCircle, FiRepeat, FiShare2 } from 'react-icons/fi';
-import { useParams } from 'react-router-dom';
+import { FiMoreHorizontal, FiHeart, FiMessageCircle, FiRepeat, FiShare2, FiMeh, FiArrowLeft } from 'react-icons/fi';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import defaultAvatar from '../assets/default-avatar.png'
 import { toast } from 'react-toastify';
@@ -13,6 +13,7 @@ function UserPostPage() {
     const {username,pId}=useParams()
     const user=JSON.parse(localStorage.getItem("user-threads"))
     const currentUserId=user.id
+    const navigate=useNavigate()
     const { dark,} = useContext(ContextProvider);
     // Dynamic color classes
     const textColor = dark ? 'text-gray-100' : 'text-gray-800';
@@ -23,6 +24,7 @@ function UserPostPage() {
     const [postData,setPostData]=useState([])
     const [userData,setUserData]=useState([])
     const [isLoading,setIsLoading]=useState(false)
+    const [noPost,setnoPost]=useState(false)
     async function postLiked(id){
         try {
             const res=await axios.post(`http://localhost:4000/api/post/like&dislike/${id}`,
@@ -47,7 +49,7 @@ function UserPostPage() {
             setUserData(resuser?.data)
           } catch (error) {
             console.log(error)
-            toast("cant load the post")
+            setnoPost(true)
           }finally{
             setIsLoading(false)
           }
@@ -57,6 +59,28 @@ function UserPostPage() {
     },[])
     if(isLoading){
         return <Loading/>
+    }
+    if(postData?.postedBy?.toString()!=userData?._id?.toString() ||noPost){
+        return(
+            <div className={`flex flex-col items-center justify-center min-h-[60vh] px-4 text-center transition-all duration-300 ${dark ? 'bg-gray-900' : 'bg-white'}`}>
+            <div className={`p-6 rounded-full mb-4 ${dark ? 'bg-gray-800' : 'bg-gray-100'} animate-bounce`}>
+              <FiMeh className={`text-4xl ${dark ? 'text-gray-400' : 'text-gray-500'}`} />
+            </div>
+            <h3 className={`text-xl font-medium mb-2 ${dark ? 'text-gray-100' : 'text-gray-800'}`}>
+              No posts found
+            </h3>
+            <p className={`max-w-md mb-6 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
+              It looks quiet here. Try another page or come back later.
+            </p>
+            <button 
+              onClick={() => navigate(-1)} // Go back to previous page
+              className={`flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-colors ${dark ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+            >
+              <FiArrowLeft />
+              Go Back
+            </button>
+          </div>
+        )
     }
     return (
         <div className={`${dark ? 'bg-gray-900' : 'bg-white'} flex flex-col w-full sm:text-base text-xs`}>
