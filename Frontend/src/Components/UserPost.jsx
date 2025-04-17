@@ -5,42 +5,67 @@ import { ContextProvider } from '../../ContextApi/ContextApi';
 import { useContext } from 'react';
 import profile from '../assets/zuck-avatar.png';
 import verified from "../assets/verified.png";
-import post1 from '../assets/post1.png';
-import axios  from 'axios'
+import axios from 'axios';
 import Loading from './Loading/Loading';
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify';
+
 function UserPost(params) {
-  const {data}=params
-  const userId=data._id
+  const user = JSON.parse(localStorage.getItem("user-threads"));
+  const currentUserId = user.id;
+  const { data } = params;
+  const userId = data._id;
   const { toggleLiked, liked, dark } = useContext(ContextProvider);
   const [isLoading, setIsLoading] = useState(true);
   const [postNotFound, setPostNotFound] = useState(false);
-  const [postData,setpostData]=useState([])
-  async function MyPost(){
+  const [postData, setPostData] = useState([]);
+
+  async function postLike(id) {
+    try {
+      const res = await axios.post(
+        `http://localhost:4000/api/post/like&dislike/${id}`,
+        { currentUserId },
+        { withCredentials: true }
+      );
+      MyPost(); // Refresh posts after like/dislike
+      return res;
+    } catch (error) {
+      toast.error("Failed to like post");
+    }
+  }
+
+  async function MyPost() {
     try {
       setIsLoading(true);
       setPostNotFound(false);
-      const res = await axios.get(`http://localhost:4000/api/post/getpostpostedBy/${userId}`, { 
-        withCredentials: true,
-        validateStatus: (status) => status < 500 // Resolve for all status codes less than 500
-      });
-      setpostData(res.data)
+      const res = await axios.get(
+        `http://localhost:4000/api/post/getpostpostedBy/${userId}`,
+        { 
+          withCredentials: true,
+          validateStatus: (status) => status < 500
+        }
+      );
+      
       if (res.status === 404) {
         setPostNotFound(true);
         return;
       }
-      if (res.status !== 200) {
+      
+      if (res.status === 200) {
+        setPostData(res.data);
+      } else {
         throw new Error('Failed to fetch user data');
       }
     } catch (error) {
-      toast("no post ");
+      toast.error("No posts found");
     } finally {
       setIsLoading(false);
     }
   }
-  useEffect(()=>{
-     MyPost()
-  },[])
+
+  useEffect(() => {
+    MyPost();
+  }, [userId]);
+
   // Dynamic theme classes
   const theme = {
     bg: dark ? 'bg-gray-900' : 'bg-white',
@@ -52,14 +77,13 @@ function UserPost(params) {
     card: dark ? 'bg-gray-800/30' : 'bg-gray-50/50',
     accent: dark ? 'text-blue-400' : 'text-blue-500'
   };
-   
-  if (isLoading) return (
-    <Loading/>
-  );
+
+  if (isLoading) return <Loading />;
+  if (postNotFound) return <div className={`p-4 ${theme.text}`}>No posts found</div>;
 
   return (
-    postData?.map((post,index)=>{
-      return(<div key={index} className="block transition-transform duration-300 hover:scale-[1.01] active:scale-[0.99]">
+    postData?.map((post, index) => (
+      <div key={index} className="block transition-transform duration-300 hover:scale-[1.01] active:scale-[0.99]">
         <div className={`
           ${theme.bg}
           p-5 mb-6 rounded-2xl
@@ -74,7 +98,7 @@ function UserPost(params) {
           <div className="flex items-start gap-4 mb-5">
             <div className="relative group">
               <img 
-                src={data.profilepic} 
+                src={data.profilepic || profile} 
                 className={`
                   w-12 h-12 rounded-full object-cover
                   border-2 ${theme.border}
@@ -111,7 +135,7 @@ function UserPost(params) {
   
               {/* Post content */}
               <div className="sm:text-base text-sm mt-3 mb-5">
-                <p className={` leading-relaxed ${theme.text}`}>
+                <p className={`leading-relaxed ${theme.text}`}>
                     {post.text}
                   <span className={`block mt-2 ${theme.accent} font-medium`}>#FutureIsComing</span>
                 </p>
@@ -120,27 +144,30 @@ function UserPost(params) {
           </div>
   
           {/* Featured image */}
-          <div className={`
-            relative mb-5 rounded-xl overflow-hidden
-            shadow-lg
-            transition-all duration-500
-            hover:shadow-xl
-            ${dark ? 'hover:shadow-gray-800/30' : 'hover:shadow-gray-300/30'}
-          `}>
-            <img 
-              src={post?.image ? post.image :null} 
-              className={`
-                w-full h-auto max-h-96 object-cover
-                transition-transform duration-700 ease-in-out
-                hover:scale-105
-              `}
-            />
+          {post?.image && (
             <div className={`
-              absolute inset-0 bg-gradient-to-t
-              ${dark ? 'from-gray-900/40 to-gray-900/10' : 'from-white/20 to-white/5'}
-              pointer-events-none
-            `}></div>
-          </div>
+              relative mb-5 rounded-xl overflow-hidden
+              shadow-lg
+              transition-all duration-500
+              hover:shadow-xl
+              ${dark ? 'hover:shadow-gray-800/30' : 'hover:shadow-gray-300/30'}
+            `}>
+              <img 
+                src={post.image} 
+                className={`
+                  w-full h-auto max-h-96 object-cover
+                  transition-transform duration-700 ease-in-out
+                  hover:scale-105
+                `}
+                alt="Post content"
+              />
+              <div className={`
+                absolute inset-0 bg-gradient-to-t
+                ${dark ? 'from-gray-900/40 to-gray-900/10' : 'from-white/20 to-white/5'}
+                pointer-events-none
+              `}></div>
+            </div>
+          )}
   
           {/* Horizontal action bar */}
           <div className="flex justify-between items-center px-2">
@@ -149,18 +176,19 @@ function UserPost(params) {
                 onClick={(e) => {
                   e.preventDefault();
                   toggleLiked(e);
+                  postLike(post._id);
                 }}
                 className={`
                   flex items-center gap-1 p-2 rounded-lg
-                  ${liked ? 'text-red-500' : theme.icon}
+                  ${post.like.includes(currentUserId) ? 'text-red-500' : theme.icon}
                   ${theme.hoverBg}
                   transition-colors duration-200
                   relative overflow-hidden
                 `}
               >
-                <FiHeart className={liked ? 'fill-current' : ''} size={20} />
-                <span className={`text-sm ${theme.text}`}>801</span>
-                {liked && (
+                <FiHeart className={post.like.includes(currentUserId) ? 'fill-current' : ''} size={20} />
+                <span className={`text-sm ${theme.text}`}>{post.like.length}</span>
+                {post.like.includes(currentUserId) && (
                   <div className={`
                     absolute inset-0 rounded-full
                     bg-red-500/10
@@ -168,14 +196,14 @@ function UserPost(params) {
                   `}></div>
                 )}
               </button>
-              <button className={`
+              <Link to={`/${data.username}/post/${post._id}`} className={`
                 flex items-center gap-1 p-2 rounded-lg
                 ${theme.hoverBg}
                 transition-colors duration-200
               `}>
                 <FiMessageCircle size={20} className={theme.icon} />
-                <span className={`text-sm ${theme.text}`}>338</span>
-              </button>
+                <span className={`text-sm ${theme.text}`}>{post.comment.length}</span>
+              </Link>
             </div>
   
             <div className="flex gap-1">
@@ -196,9 +224,8 @@ function UserPost(params) {
             </div>
           </div>
         </div>
-      </div>)
-    })
+      </div>
+    ))
   );
 }
-
 export default UserPost;
