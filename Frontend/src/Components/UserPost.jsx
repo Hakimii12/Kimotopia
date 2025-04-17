@@ -8,6 +8,7 @@ import verified from "../assets/verified.png";
 import axios from 'axios';
 import Loading from './Loading/Loading';
 import { toast } from 'react-toastify';
+import { RiDeleteBackLine, RiDeleteBin2Fill } from 'react-icons/ri';
 
 
 function UserPost(params) {
@@ -19,6 +20,20 @@ function UserPost(params) {
   const [isLoading, setIsLoading] = useState(true);
   const [postNotFound, setPostNotFound] = useState(false);
   const [postData, setPostData] = useState([]);
+  async function DeletePost(id){
+    try {
+        const res= await axios.delete(
+            `http://localhost:4000/api/post/deletepost/${id}`,
+            { withCredentials: true }
+        )
+        toast("post deleted")
+        MyPost()
+    } catch (error) {
+        toast("feild to delete this post")
+       console.log(error) 
+    }
+    
+}
 
   async function postLike(id) {
     try {
@@ -125,12 +140,12 @@ function UserPost(params) {
                   <img src={verified} className="w-4 h-4" alt="Verified" />
                   <span className={`text-sm ${theme.secondaryText}`}>1d</span>
                 </div>
-                <button className={`
+                <button onClick={()=>DeletePost(post._id)} className={`
                   p-2 rounded-full
                   ${theme.hoverBg}
                   transition-colors duration-200
                 `}>
-                  <FiMoreHorizontal className={theme.icon} />
+                  <RiDeleteBin2Fill className={theme.icon} />
                 </button>
               </div>
   
@@ -204,23 +219,6 @@ function UserPost(params) {
                 <FiMessageCircle size={20} className={theme.icon} />
                 <span className={`text-sm ${theme.text}`}>{post.comment.length}</span>
               </Link>
-            </div>
-  
-            <div className="flex gap-1">
-              <button className={`
-                p-2 rounded-lg
-                ${theme.hoverBg}
-                transition-colors duration-200
-              `}>
-                <FiRepeat size={20} className={theme.icon} />
-              </button>
-              <button className={`
-                p-2 rounded-lg
-                ${theme.hoverBg}
-                transition-colors duration-200
-              `}>
-                <FiShare2 size={20} className={theme.icon} />
-              </button>
             </div>
           </div>
         </div>

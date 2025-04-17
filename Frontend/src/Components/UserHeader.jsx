@@ -165,7 +165,7 @@ function UserHeader(params) {
                       Update Profile
                     </div>
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => {
                       navigate('/settings');
                       setShowDropdown(false);
@@ -176,8 +176,8 @@ function UserHeader(params) {
                       <FiSettings className="mr-2" size={14} />
                       Settings
                     </div>
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => {
                       navigate('/profile');
                       setShowDropdown(false);
@@ -188,7 +188,7 @@ function UserHeader(params) {
                       <FiUser className="mr-2" size={14} />
                       View Profile
                     </div>
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => {
                       handleLogout();

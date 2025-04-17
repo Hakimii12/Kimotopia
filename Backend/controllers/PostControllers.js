@@ -170,8 +170,6 @@ export async function DeleteComment(req,res){
     } catch (error) {
         res.status(500).json({message:error.message})
     }
-    
-
 }
 export async function getFeedPosts(req, res) {
     try {

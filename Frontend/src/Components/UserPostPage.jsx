@@ -2,14 +2,13 @@ import React, { useState, useEffect, useContext, use } from 'react';
 import verified from "../assets/verified.png";
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import Comment from './Comment';
-import { FiMoreHorizontal, FiHeart, FiMessageCircle, FiRepeat, FiShare2, FiMeh, FiArrowLeft } from 'react-icons/fi';
+import { FiMoreHorizontal, FiHeart, FiMessageCircle,FiMeh, FiArrowLeft } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import defaultAvatar from '../assets/default-avatar.png';
 import { toast } from 'react-toastify';
 import Loading from './Loading/Loading';
-import { RiSendPlaneFill } from 'react-icons/ri';
-
+import { RiDeleteBin2Line, RiDeleteBin4Fill, RiSendPlaneFill } from 'react-icons/ri';
 function UserPostPage() {
     const { username, pId } = useParams();
     const user = JSON.parse(localStorage.getItem("user-threads"));
@@ -37,6 +36,20 @@ function UserPostPage() {
             { withCredentials: true }
         );
         setcurrentuser(currentuser?.data)
+    }
+    async function DeletePost(){
+        try {
+            const res= await axios.delete(
+                `http://localhost:4000/api/post/deletepost/${pId}`,
+                { withCredentials: true }
+            )
+            toast("post deleted")
+            navigate(-1)
+        } catch (error) {
+            toast("feild to delete this post")
+           console.log(error) 
+        }
+        
     }
     async function postLiked(id) {
         try {
@@ -183,10 +196,10 @@ function UserPostPage() {
 
                                 <div className="flex gap-1">
                                     <button className={`p-2 rounded-lg ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
-                                        <FiRepeat size={20} className={iconColor} />
+                                        
                                     </button>
-                                    <button className={`p-2 rounded-lg ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
-                                        <FiShare2 size={20} className={iconColor} />
+                                    <button onClick={DeletePost} className={`p-2 rounded-lg ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
+                                        <RiDeleteBin2Line size={20} className={iconColor} />
                                     </button>
                                 </div>
                             </div>
