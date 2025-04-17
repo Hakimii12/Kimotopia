@@ -156,8 +156,8 @@ function UserPostPage() {
             {/* Comments Section */}
             <div className="px-5 pb-5">
                 {postData?.comment?.length>0 ?(
-                    postData.comment.map((comment)=>{
-                        return(<Comment comment={comment}/>)
+                    postData.comment.map((comment,index)=>{
+                        return(<Comment key={index} comment={comment}/>)
                     })
                 ):(<div className={`flex flex-col items-center justify-center py-10 ${dark ? 'bg-gray-900' : 'bg-white'}`}>
                 <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-4 ${dark ? 'bg-gray-800' : 'bg-gray-100'}`}>

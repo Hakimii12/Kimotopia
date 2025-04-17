@@ -5,11 +5,12 @@ import { ContextProvider } from '../../ContextApi/ContextApi';
 import defaultAvatar from "../assets/default-avatar.png"
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 const Comment = (comment) => {
-  console.log(comment.comment)
+  const user=JSON.parse(localStorage.getItem("user-threads"))
+  const currentUserId=user.id
   const { dark } = useContext(ContextProvider);
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  // Colors for dark/light mode
+  const [deletePermition, setdeletePermition] = useState(comment.comment.userId==currentUserId);
+  console.log(deletePermition)
+  console.log(comment.comment.userId)
   const colors = {
     text: dark ? 'text-white' : 'text-black',
     secondaryText: dark ? 'text-gray-400' : 'text-gray-500',
@@ -42,7 +43,7 @@ const Comment = (comment) => {
             {/* More options button */}
             <button 
               // onClick={DeletComment()}
-              className={`p-1 rounded-full ${colors.hover}`}
+              className={deletePermition?`p-1 rounded-full ${colors.hover}`:'hidden'}
             >
               <RiDeleteBin2Fill className={colors.icon} size={16} />
             </button>
@@ -50,14 +51,6 @@ const Comment = (comment) => {
 
           {/* Comment text */}
           <p className={`mt-1 ${colors.text}`}>{comment.comment.text}</p>
-          {/* Dropdown menu */}
-          {showDropdown && (
-            <div className={`absolute right-0 mt-1 w-40 rounded-md shadow-lg ${colors.background} border ${colors.border}`}>
-              <button className={`w-full text-left px-4 py-2 text-sm ${colors.text} ${colors.hover}`}>
-                Delete
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>
