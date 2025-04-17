@@ -46,7 +46,6 @@ function UserPostPage() {
             toast("post deleted")
             navigate(-1)
         } catch (error) {
-            toast("feild to delete this post")
            console.log(error) 
         }
         
@@ -198,7 +197,7 @@ function UserPostPage() {
                                     <button className={`p-2 rounded-lg ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
                                         
                                     </button>
-                                    <button onClick={DeletePost} className={`p-2 rounded-lg ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
+                                    <button onClick={DeletePost} className={currentUserId==postData?.postedBy?`p-2 rounded-lg ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`:"hidden"}>
                                         <RiDeleteBin2Line size={20} className={iconColor} />
                                     </button>
                                 </div>

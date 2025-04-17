@@ -15,8 +15,8 @@ function Comment(params){
       try {
         const res =await axios.delete(`http://localhost:4000/api/post/deletecomment/${pId}/${commentId}`,{
           withCredentials:true
-        }
-          )
+        })
+        window.location.reload()
       } catch (error) {
         console.log(error)
       }
