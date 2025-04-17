@@ -140,11 +140,12 @@ function UserPost(params) {
                   <img src={verified} className="w-4 h-4" alt="Verified" />
                   <span className={`text-sm ${theme.secondaryText}`}>1d</span>
                 </div>
-                <button onClick={()=>DeletePost(post._id)} className={`
+                <button onClick={()=>DeletePost(post._id)} 
+                   className={post.postedBy==currentUserId?`
                   p-2 rounded-full
                   ${theme.hoverBg}
                   transition-colors duration-200
-                `}>
+                `:"hidden"}>
                   <RiDeleteBin2Fill className={theme.icon} />
                 </button>
               </div>
