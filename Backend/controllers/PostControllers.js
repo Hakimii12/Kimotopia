@@ -145,6 +145,34 @@ export async function Reply(req,res){
     
 
 }
+export async function DeleteComment(req,res){
+    try {
+        const {pId,commentId}=req.params
+        const userId=req.user._id
+        const userToDelete=await User.findById(userId).select("-password")
+        const post =await Post.findById(pId)
+        if(!post){
+            return res.status(404).json({message:"post not found"})
+        }
+        if(!commentId){
+            return res.status(404).json({message:"invalid comment id"})
+        }
+        const commentToDelete=post.comment.findIndex((c)=>(c._id.equals(commentId)&&c.userId.equals(userId)))
+        if(!userToDelete){
+            return res.status(404).json({message:"user not found"})
+        }
+        if(commentToDelete===-1){
+            return res.status(404).json({message:"no comment found"})
+        }
+        await post.comment.splice(commentToDelete,1)
+        await post.save()
+        return res.status(200).json({message:`comment deleted`})
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+    
+
+}
 export async function getFeedPosts(req, res) {
     try {
         const userId = req.user._id;
