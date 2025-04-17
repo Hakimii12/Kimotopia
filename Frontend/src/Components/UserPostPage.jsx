@@ -15,8 +15,7 @@ function UserPostPage() {
     const {username,pId}=useParams()
     const user=JSON.parse(localStorage.getItem("user-threads"))
     const currentUserId=user.id
-    console.log(currentUserId)
-    const { toggleLiked, dark, liked } = useContext(ContextProvider);
+    const { dark,} = useContext(ContextProvider);
     // Dynamic color classes
     const textColor = dark ? 'text-gray-100' : 'text-gray-800';
     const secondaryTextColor = dark ? 'text-gray-400' : 'text-gray-500';
@@ -94,7 +93,6 @@ function UserPostPage() {
                                     <button 
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            toggleLiked(e);
                                             postLiked(postData._id)
                                         }}
                                         className={`flex items-center gap-1 p-2 rounded-lg ${postData?.like?.includes(currentUserId) ? 'text-red-500' : iconColor} ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
@@ -104,7 +102,7 @@ function UserPostPage() {
                                     </button>
                                     <button className={`flex items-center gap-1 p-2 rounded-lg ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
                                         <FiMessageCircle size={20} className={iconColor} />
-                                        <span className={`text-sm ${textColor}`}>338</span>
+                                        <span className={`text-sm ${textColor}`}>{postData?.comment?.length}</span>
                                     </button>
                                 </div>
 
@@ -135,12 +133,7 @@ function UserPostPage() {
 
             {/* Comments Section */}
             <div className="px-5 pb-5">
-                <Comment />
-                <Comment />
-                <Comment />
-                <Comment />
-                <Comment />
-                <Comment />
+                <Comment currentUserId={currentUserId} postData={postData}/>
             </div>
         </div>
     );
