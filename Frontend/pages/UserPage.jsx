@@ -5,12 +5,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ContextProvider } from '../ContextApi/ContextApi';
 import NotFound from './notFound';
-
 function UserPage() {
   const { dark } = useContext(ContextProvider);
   const { username } = useParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true); // Start with true since we load immediately
+  const [isLoading, setIsLoading] = useState(true);
   const [userNotFound, setUserNotFound] = useState(false);
   const [data,setData]=useState(null)
   async function fetchUserData() {
@@ -19,7 +18,7 @@ function UserPage() {
       setUserNotFound(false);
       const res = await axios.get(`http://localhost:4000/api/user/profile/${username}`, { 
         withCredentials: true,
-        validateStatus: (status) => status < 500 // Resolve for all status codes less than 500
+        validateStatus: (status) => status < 500
       });
        setData(res.data)
       if (res.status === 404) {

@@ -9,6 +9,7 @@ import axios from 'axios';
 import Loading from './Loading/Loading';
 import { toast } from 'react-toastify';
 
+
 function UserPost(params) {
   const user = JSON.parse(localStorage.getItem("user-threads"));
   const currentUserId = user.id;
@@ -137,7 +138,6 @@ function UserPost(params) {
               <div className="sm:text-base text-sm mt-3 mb-5">
                 <p className={`leading-relaxed ${theme.text}`}>
                     {post.text}
-                  <span className={`block mt-2 ${theme.accent} font-medium`}>#FutureIsComing</span>
                 </p>
               </div>
             </div>
