@@ -4,16 +4,19 @@ import { FiPlus } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { ContextProvider } from "../ContextApi/ContextApi";
 import axios from "axios";
-
+import Loading from "@/Components/Loading/Loading";
+import NotFound from "./NotFound";
 function Home() {
   const { dark } = useContext(ContextProvider);
   const navigate = useNavigate();
   const [noPost,setnoPost]=useState(false)
   const [feeds, setFeeds] = useState([]);
+  const [isLoading,setIsLoading]=useState(false)
   const handleCreatePost = () => {
     navigate("/Post");
   };
   async function GetFeeds(){
+    setIsLoading(true)
     try {
       const res=await axios.get("http://localhost:4000/api/post/feed",{
         withCredentials:true
@@ -21,6 +24,9 @@ function Home() {
       setFeeds(res.data)
     } catch (error) {
       console.log(error)
+      setnoPost(true)
+    }finally{
+      setIsLoading(false)
     }
   }
   useEffect(()=>{
@@ -87,7 +93,14 @@ function Home() {
   
   // Select your preferred scheme here (use different schemes for different modes if you want)
   const selectedScheme = dark ? modeSchemes.midnightEmerald : modeSchemes.morningSky;
-
+ if(isLoading){
+  return(
+    <Loading/>
+  )
+ }
+ if(noPost){
+  return(<NotFound/>)
+ }
   return (
     
     <div style={{ 

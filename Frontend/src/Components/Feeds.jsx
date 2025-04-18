@@ -4,10 +4,8 @@ import { FiMoreHorizontal, FiHeart, FiMessageCircle, FiRepeat, FiShare2 } from '
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import { useContext } from 'react';
 import verified from "../assets/verified.png";
-import post1 from '../assets/post1.png';
 import defualtAavater from '../assets/default-avatar.png'
 import axios from 'axios';
-import Logout from '../../pages/Logout';
 function Feeds(params) {
   const {feed}=params
   const { toggleLiked, liked, dark } = useContext(ContextProvider);
@@ -104,13 +102,13 @@ function Feeds(params) {
           ${dark ? 'hover:shadow-gray-800/30' : 'hover:shadow-gray-300/30'}
         `}>
           <img 
-            src={post1} 
+            src={feed.image? feed.image:null} 
             className={`
               w-full h-auto max-h-96 object-cover
               transition-transform duration-700 ease-in-out
               hover:scale-105
             `}
-            alt="Post content"
+            alt={null}
           />
           <div className={`
             absolute inset-0 bg-gradient-to-t
@@ -152,23 +150,6 @@ function Feeds(params) {
             `}>
               <FiMessageCircle size={20} className={theme.icon} />
               <span className={`text-sm ${theme.text}`}>{feed.comment.length}</span>
-            </button>
-          </div>
-
-          <div className="flex gap-1">
-            <button className={`
-              p-2 rounded-lg
-              ${theme.hoverBg}
-              transition-colors duration-200
-            `}>
-              <FiRepeat size={20} className={theme.icon} />
-            </button>
-            <button className={`
-              p-2 rounded-lg
-              ${theme.hoverBg}
-              transition-colors duration-200
-            `}>
-              <FiShare2 size={20} className={theme.icon} />
             </button>
           </div>
         </div>
