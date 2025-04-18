@@ -2,7 +2,8 @@ import React from 'react';
 import Mylogo from "../assets/Mylogo.jpg";
 import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { FiSun, FiMoon, FiLogOut } from 'react-icons/fi';
+import Logout from '../../pages/Logout';
 
 function Header() {
   const { dark, toggleLight, toggleDark } = useContext(ContextProvider);
@@ -21,6 +22,7 @@ function Header() {
       ${dark ? 'border-gray-800' : 'border-gray-100'}
       transition-all duration-300 ease-in-out
     `}>
+      {/* Logo on the left */}
       <div className="flex items-center space-x-3">
         <img 
           src={Mylogo} 
@@ -48,52 +50,92 @@ function Header() {
         </h1>
       </div>
 
-      <button 
-        onClick={dark ? toggleLight : toggleDark}
-        className={`
-          p-3 
-          rounded-full
-          ${dark ? 'hover:bg-gray-800/60 bg-gray-800/30' : 'hover:bg-gray-100/60 bg-gray-100/30'}
-          shadow-sm
-          ${dark ? 'shadow-gray-800' : 'shadow-gray-200'}
-          transition-all duration-300
-          group
-          relative
-          overflow-hidden
-        `}
-        aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        {dark ? (
-          <FiSun 
-            className='
-              text-amber-300 
-              group-hover:text-amber-200
+      {/* Light/Dark mode toggle in the middle */}
+      <div className="flex-1 flex justify-center">
+        <button 
+          onClick={dark ? toggleLight : toggleDark}
+          className={`
+            p-3 
+            rounded-full
+            ${dark ? 'hover:bg-gray-800/60 bg-gray-800/30' : 'hover:bg-gray-100/60 bg-gray-100/30'}
+            shadow-sm
+            ${dark ? 'shadow-gray-800' : 'shadow-gray-200'}
+            transition-all duration-300
+            group
+            relative
+            overflow-hidden
+          `}
+          aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {dark ? (
+            <FiSun 
+              className='
+                text-amber-300 
+                group-hover:text-amber-200
+                transition-colors duration-300
+              ' 
+              size={24}
+            />
+          ) : (
+            <FiMoon 
+              className='
+                text-indigo-600
+                group-hover:text-indigo-700
+                transition-colors duration-300
+              ' 
+              size={24}
+            />
+          )}
+          <span className={`
+            absolute inset-0
+            ${dark ? 'bg-amber-400/10' : 'bg-indigo-400/10'}
+            opacity-0
+            group-hover:opacity-100
+            transition-opacity duration-300
+            rounded-full
+            scale-0
+            group-hover:scale-100
+            transition-transform duration-500
+          `}></span>
+        </button>
+      </div>
+
+      {/* Logout button on the right */}
+      <div className="flex justify-end">
+        <button
+          className={`
+            p-3 
+            rounded-full
+            ${dark ? 'hover:bg-gray-800/60 bg-gray-800/30' : 'hover:bg-gray-100/60 bg-gray-100/30'}
+            shadow-sm
+            ${dark ? 'shadow-gray-800' : 'shadow-gray-200'}
+            transition-all duration-300
+            group
+            relative
+            overflow-hidden
+          `}
+          aria-label="Logout"
+        >
+          <FiLogOut 
+            className={`
+              ${dark ? 'text-red-400 group-hover:text-red-300' : 'text-red-500 group-hover:text-red-600'}
               transition-colors duration-300
-            ' 
+            `} 
             size={24}
           />
-        ) : (
-          <FiMoon 
-            className='
-              text-indigo-600
-              group-hover:text-indigo-700
-              transition-colors duration-300
-            ' 
-            size={24}
-          />
-        )}
-        <span className={`
-          absolute inset-0
-          ${dark ? 'bg-amber-400/10' : 'bg-indigo-400/10'}
-          opacity-0
-          group-hover:opacity-100
-          transition-opacity duration-300
-          rounded-full
-          scale-0
-          group-hover:scale-100
-          transition-transform duration-500
-        `}></span>
-      </button>
+          <span className={`
+            absolute inset-0
+            ${dark ? 'bg-red-400/10' : 'bg-red-400/10'}
+            opacity-0
+            group-hover:opacity-100
+            transition-opacity duration-300
+            rounded-full
+            scale-0
+            group-hover:scale-100
+            transition-transform duration-500
+          `}></span>
+        </button>
+      </div>
     </div>
   );
 }

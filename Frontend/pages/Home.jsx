@@ -96,6 +96,7 @@ function Home() {
       minHeight: "100vh",
       backgroundColor: dark ? '#0f172a' : '#f8fafc'
     }}>
+      <Logout/>
       {/* {horizontal scrollable } */}
       {feeds?.map((feed,index)=>{
         return( 
@@ -152,6 +153,7 @@ function Home() {
           }} 
         />
       </button>
+      
     </div>
   );
 }

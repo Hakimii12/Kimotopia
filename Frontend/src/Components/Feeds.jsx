@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { FiMoreHorizontal, FiHeart, FiMessageCircle, FiRepeat, FiShare2 } from 'react-icons/fi';
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import { useContext } from 'react';
-import profile from '../assets/zuck-avatar.png';
 import verified from "../assets/verified.png";
 import post1 from '../assets/post1.png';
 import defualtAavater from '../assets/default-avatar.png'
 import axios from 'axios';
+import Logout from '../../pages/Logout';
 function Feeds(params) {
   const {feed}=params
   const { toggleLiked, liked, dark } = useContext(ContextProvider);
