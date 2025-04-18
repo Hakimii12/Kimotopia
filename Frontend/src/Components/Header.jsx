@@ -22,8 +22,8 @@ function Header() {
       ${dark ? 'border-gray-800' : 'border-gray-100'}
       transition-all duration-300 ease-in-out
     `}>
-      {/* Logo on the left */}
-      <div className="flex items-center space-x-3">
+      {/* Logo on the left - fixed width */}
+      <div className="w-1/3 flex items-center space-x-3">
         <img 
           src={Mylogo} 
           className={`
@@ -50,7 +50,7 @@ function Header() {
         </h1>
       </div>
 
-      {/* Light/Dark mode toggle in the middle */}
+      {/* Light/Dark mode toggle in the absolute center */}
       <div className="flex-1 flex justify-center">
         <button 
           onClick={dark ? toggleLight : toggleDark}
@@ -64,6 +64,7 @@ function Header() {
             group
             relative
             overflow-hidden
+            mx-auto
           `}
           aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
@@ -100,8 +101,8 @@ function Header() {
         </button>
       </div>
 
-      {/* Logout button on the right */}
-      <div className="flex justify-end">
+      {/* Logout button on the right - fixed width */}
+      <div className="w-1/3 flex justify-end">
         <button
           className={`
             p-3 

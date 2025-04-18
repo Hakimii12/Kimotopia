@@ -1,5 +1,4 @@
 import Feeds from "@/Components/Feeds";
-import Logout from "./Logout";
 import { useNavigate } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
@@ -96,7 +95,6 @@ function Home() {
       minHeight: "100vh",
       backgroundColor: dark ? '#0f172a' : '#f8fafc'
     }}>
-      <Logout/>
       {/* {horizontal scrollable } */}
       {feeds?.map((feed,index)=>{
         return( 
