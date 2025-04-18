@@ -9,7 +9,6 @@ import {toast,ToastContainer} from 'react-toastify'
 import Home from '../pages/Home'
 import UpdateProfile from '../pages/UpdateProfile'
 import CreatePost from './Components/CreatePost'
-import Logout from '../pages/Logout'
 function App() {
   const { dark,isAuth,} = useContext(ContextProvider)
   return (

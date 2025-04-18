@@ -8,9 +8,14 @@ import defualtAavater from '../assets/default-avatar.png'
 import axios from 'axios';
 function Feeds(params) {
   const {feed}=params
-  const { toggleLiked, liked, dark } = useContext(ContextProvider);
+  const {toggleLike}=params
+  const user=JSON.parse(localStorage.getItem("user-threads"))
+  const currentUserId=user.id
+  const postedId=feed.postedBy
+  const { dark } = useContext(ContextProvider);
   const [userData,setUserData]=useState([])
   // Dynamic theme classes
+  
   const theme = {
     bg: dark ? 'bg-gray-900' : 'bg-white',
     text: dark ? 'text-gray-100' : 'text-gray-800',
@@ -123,19 +128,19 @@ function Feeds(params) {
             <button 
               onClick={(e) => {
                 e.preventDefault();
-                toggleLiked(e);
+                toggleLike()
               }}
               className={`
                 flex items-center gap-1 p-2 rounded-lg
-                ${liked ? 'text-red-500' : theme.icon}
+                ${feed.like.includes(currentUserId) ? 'text-red-500' : theme.icon}
                 ${theme.hoverBg}
                 transition-colors duration-200
                 relative overflow-hidden
               `}
             >
-              <FiHeart className={liked ? 'fill-current' : ''} size={20} />
+              <FiHeart className={feed.like.includes(currentUserId) ? 'fill-current' : ''} size={20} />
               <span className={`text-sm ${theme.text}`}>{feed.like.length}</span>
-              {liked && (
+              {feed.like.includes(currentUserId) && (
                 <div className={`
                   absolute inset-0 rounded-full
                   bg-red-500/10

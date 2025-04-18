@@ -8,6 +8,8 @@ import Loading from "@/Components/Loading/Loading";
 import NotFound from "./NotFound";
 function Home() {
   const { dark } = useContext(ContextProvider);
+  const user=JSON.parse(localStorage.getItem("user-threads"))
+  const currentUserId=user.id
   const navigate = useNavigate();
   const [noPost,setnoPost]=useState(false)
   const [feeds, setFeeds] = useState([]);
@@ -15,6 +17,19 @@ function Home() {
   const handleCreatePost = () => {
     navigate("/Post");
   };
+  async function toggleLike(){
+    try {
+      const res=await axios.post(`http://localhost:4000/api/post/like&dislike/${feeds?.map((feed)=>{
+        return(feed._id)
+      })}`,{currentUserId},
+        {withCredentials:true}
+      )
+      GetFeeds()
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
   async function GetFeeds(){
     setIsLoading(true)
     try {
@@ -108,11 +123,72 @@ function Home() {
       minHeight: "100vh",
       backgroundColor: dark ? '#0f172a' : '#f8fafc'
     }}>
-      {/* {horizontal scrollable } */}
+      {/* Horizontal scrollable user carousel */}
+<div style={{
+  display: 'flex',
+  overflowX: 'auto',
+  gap: '12px',
+  padding: '12px 16px',
+  backgroundColor: dark ? '#1e293b' : '#f1f5f9',
+  marginBottom: '16px'
+}}>
+<div className={`flex overflow-x-auto gap-4 py-4 px-4 mb-6 ${dark ? 'bg-slate-800' : 'bg-slate-100'} min-h-[180px] items-center scrollbar-hide`}>
+  {[1, 2, 3, 4, 5].map((user) => (
+    <div 
+      key={user} 
+      className={`shrink-0 w-36 flex flex-col items-center p-3 rounded-lg ${
+        dark ? 'bg-slate-700 border border-slate-600' : 'bg-white border border-slate-200'
+      } shadow-sm`}
+    >
+      {/* Profile Picture Placeholder with Initial */}
+      <div className={`w-14 h-14 rounded-full mb-3 flex items-center justify-center ${
+        dark ? 'bg-slate-600 text-slate-200' : 'bg-slate-200 text-slate-600'
+      } font-medium text-lg`}>
+        {String.fromCharCode(64 + user)} {/* Shows A, B, C, etc. */}
+      </div>
+      
+      {/* User Name */}
+      <p className={`font-semibold text-sm mb-1 ${
+        dark ? 'text-white' : 'text-slate-800'
+      }`}>
+        User {user}
+      </p>
+      
+      {/* Username */}
+      <p className={`text-xs mb-3 ${
+        dark ? 'text-slate-400' : 'text-slate-500'
+      }`}>
+        @user{user}
+      </p>
+      
+      {/* Follow Button */}
+      <button
+        className={`px-4 py-1.5 rounded-md text-xs font-semibold ${
+          dark 
+            ? 'bg-blue-600 hover:bg-blue-500 text-white' 
+            : 'bg-blue-500 hover:bg-blue-600 text-white'
+        } transition-colors shadow-sm`}
+      >
+        Follow
+      </button>
+    </div>
+  ))}
+</div>
+
+<style jsx global>{`
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+`}</style>
+</div>
       {feeds?.map((feed,index)=>{
         return( 
-          <div style={{ paddingBottom: "80px" }}>
-          <Feeds key={index} feed={feed} />
+          <div key={index} style={{ paddingBottom: "80px" }}>
+          <Feeds key={index} feed={feed} toggleLike={toggleLike}/>
         </div>
         )
           
