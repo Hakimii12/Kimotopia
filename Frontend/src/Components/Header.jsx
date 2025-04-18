@@ -3,10 +3,11 @@ import Mylogo from "../assets/Mylogo.jpg";
 import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import { FiSun, FiMoon, FiLogOut } from 'react-icons/fi';
-import Logout from '../../pages/Logout';
-
+import { Navigate } from 'react-router-dom';
+import {useLogout} from "../../pages/Logout"
 function Header() {
   const { dark, toggleLight, toggleDark } = useContext(ContextProvider);
+  const Logout=useLogout()
 
   return (
     <div className={`
@@ -102,8 +103,9 @@ function Header() {
       </div>
 
       {/* Logout button on the right - fixed width */}
-      <div className="w-1/3 flex justify-end">
+      <div  className="w-1/3 flex justify-end">
         <button
+        onClick={Logout}
           className={`
             p-3 
             rounded-full
@@ -116,7 +118,7 @@ function Header() {
             overflow-hidden
           `}
           aria-label="Logout"
-        >
+        > 
           <FiLogOut 
             className={`
               ${dark ? 'text-red-400 group-hover:text-red-300' : 'text-red-500 group-hover:text-red-600'}
