@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiMoreHorizontal, FiHeart, FiMessageCircle, FiRepeat, FiShare2 } from 'react-icons/fi';
 import { ContextProvider } from '../../ContextApi/ContextApi';
@@ -6,12 +6,12 @@ import { useContext } from 'react';
 import profile from '../assets/zuck-avatar.png';
 import verified from "../assets/verified.png";
 import post1 from '../assets/post1.png';
-
+import defualtAavater from '../assets/default-avatar.png'
+import axios from 'axios';
 function Feeds(params) {
   const {feed}=params
-
   const { toggleLiked, liked, dark } = useContext(ContextProvider);
-
+  const [userData,setUserData]=useState([])
   // Dynamic theme classes
   const theme = {
     bg: dark ? 'bg-gray-900' : 'bg-white',
@@ -23,10 +23,20 @@ function Feeds(params) {
     card: dark ? 'bg-gray-800/30' : 'bg-gray-50/50',
     accent: dark ? 'text-blue-400' : 'text-blue-500'
   };
-
+  async function GetUser(){
+    try {
+      const res =await axios.get(`http://localhost:4000/api/user/profilebyId/${feed.postedBy}`,
+        {withCredentials:true})
+        setUserData(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(()=>{
+    GetUser()
+  })
   return (
-    feeds.map((feed)=>{
-      <Link to="/:username/post/:pid" className="block transition-transform duration-300 hover:scale-[1.01] active:scale-[0.99]">
+      <Link to={`/${userData?.username}/post/${feed._id} `} className="block transition-transform duration-300 hover:scale-[1.01] active:scale-[0.99]">
       <div className={`
         ${theme.bg}
         p-5 mb-6 rounded-2xl
@@ -41,7 +51,7 @@ function Feeds(params) {
         <div className="flex items-start gap-4 mb-5">
           <div className="relative group">
             <img 
-              src={profile} 
+              src={userData?.profilepic||defualtAavater} 
               className={`
                 w-12 h-12 rounded-full object-cover
                 border-2 ${theme.border}
@@ -49,7 +59,6 @@ function Feeds(params) {
                 transition-all duration-300
                 group-hover:scale-110
               `}
-              alt="Profile"
             />
             <div className={`
               absolute inset-0 rounded-full
@@ -63,7 +72,7 @@ function Feeds(params) {
           <div className="flex-1">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2">
-                <h3 className={`font-bold text-lg ${theme.text} hover:underline`}>markzukerberg</h3>
+                <h3 className={`font-bold text-lg ${theme.text} hover:underline`}>{userData?.name}</h3>
                 <img src={verified} className="w-4 h-4" alt="Verified" />
                 <span className={`text-sm ${theme.secondaryText}`}>1d</span>
               </div>
@@ -79,8 +88,8 @@ function Feeds(params) {
             {/* Post content */}
             <div className="sm:text-base text-sm mt-3 mb-5">
               <p className={`text-lg leading-relaxed ${theme.text}`}>
-                Building the future of social connection through innovative technology at Meta. 
-                <span className={`block mt-2 ${theme.accent} font-medium`}>#FutureIsComing</span>
+                {feed.text}
+                {/* <span className={`block mt-2 ${theme.accent} font-medium`}>#FutureIsComing</span> */}
               </p>
             </div>
           </div>
@@ -127,7 +136,7 @@ function Feeds(params) {
               `}
             >
               <FiHeart className={liked ? 'fill-current' : ''} size={20} />
-              <span className={`text-sm ${theme.text}`}>801</span>
+              <span className={`text-sm ${theme.text}`}>{feed.like.length}</span>
               {liked && (
                 <div className={`
                   absolute inset-0 rounded-full
@@ -142,7 +151,7 @@ function Feeds(params) {
               transition-colors duration-200
             `}>
               <FiMessageCircle size={20} className={theme.icon} />
-              <span className={`text-sm ${theme.text}`}>338</span>
+              <span className={`text-sm ${theme.text}`}>{feed.comment.length}</span>
             </button>
           </div>
 
@@ -164,9 +173,7 @@ function Feeds(params) {
           </div>
         </div>
       </div>
-    </Link>
-    })
-   
+    </Link>   
   );
 }
 

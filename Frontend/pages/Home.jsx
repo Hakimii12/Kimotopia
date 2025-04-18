@@ -10,7 +10,7 @@ function Home() {
   const { dark } = useContext(ContextProvider);
   const navigate = useNavigate();
   const [noPost,setnoPost]=useState(false)
-  const [feeds,setFeeds]=useState()
+  const [feeds, setFeeds] = useState([]);
   const handleCreatePost = () => {
     navigate("/Post");
   };
@@ -26,7 +26,7 @@ function Home() {
   }
   useEffect(()=>{
     GetFeeds()
-  })
+  },[])
 
   // Color schemes for both dark and light modes
   const colorSchemes = {
@@ -90,19 +90,21 @@ function Home() {
   const selectedScheme = dark ? modeSchemes.midnightEmerald : modeSchemes.morningSky;
 
   return (
+    
     <div style={{ 
       position: "relative", 
       minHeight: "100vh",
       backgroundColor: dark ? '#0f172a' : '#f8fafc'
     }}>
       {/* {horizontal scrollable } */}
-      {feeds?.map((feed,index)=>(
+      {feeds?.map((feed,index)=>{
+        return( 
           <div style={{ paddingBottom: "80px" }}>
           <Feeds key={index} feed={feed} />
         </div>
-      ))}
-      
-
+        )
+          
+})}
       {/* Adaptive Floating Action Button */}
       <button
         onClick={handleCreatePost}
