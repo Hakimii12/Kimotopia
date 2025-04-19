@@ -165,30 +165,6 @@ function UserHeader(params) {
                       Update Profile
                     </div>
                   </button>
-                  {/* <button
-                    onClick={() => {
-                      navigate('/settings');
-                      setShowDropdown(false);
-                    }}
-                    className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
-                  >
-                    <div className="flex items-center">
-                      <FiSettings className="mr-2" size={14} />
-                      Settings
-                    </div>
-                  </button> */}
-                  {/* <button
-                    onClick={() => {
-                      navigate('/profile');
-                      setShowDropdown(false);
-                    }}
-                    className={`block px-4 py-2 text-sm w-full text-left ${dark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
-                  >
-                    <div className="flex items-center">
-                      <FiUser className="mr-2" size={14} />
-                      View Profile
-                    </div>
-                  </button> */}
                   <button
                     onClick={() => {
                       handleLogout();
@@ -243,29 +219,8 @@ function UserHeader(params) {
           </div>
         </div>
       </div>
-
       {/* Tabs */}
-      <div className="flex border-b" style={{ borderColor: dark ? '#374151' : '#e5e7eb' }}>
-        <button
-          onClick={toggleThreads}
-          className={`flex-1 py-3 font-medium relative ${threads ? (dark ? 'text-white' : 'text-blue-600') : (dark ? 'text-gray-400' : 'text-gray-500')}`}
-        >
-          Timeline
-          {threads && (
-            <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-1 rounded-full ${dark ? 'bg-blue-500' : 'bg-blue-600'}`}></span>
-          )}
-        </button>
-        
-        <button
-          onClick={toggleReplies}
-          className={`flex-1 py-3 font-medium relative ${!threads ? (dark ? 'text-white' : 'text-blue-600') : (dark ? 'text-gray-400' : 'text-gray-500')}`}
-        >
-          Highlights
-          {!threads && (
-            <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-1 rounded-full ${dark ? 'bg-blue-500' : 'bg-blue-600'}`}></span>
-          )}
-        </button>
-      </div>
+      <h2 className='text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 bg-[length:200%] hover:bg-[length:100%] transition-all duration-500'>My Post</h2>
     </div>
   );
 }

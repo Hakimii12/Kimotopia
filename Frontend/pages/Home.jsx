@@ -8,12 +8,13 @@ import Loading from "@/Components/Loading/Loading";
 import NotFound from "./NotFound";
 import defaultAvater from '.././src/assets/default-avatar.png'
 function Home() {
-  const { dark } = useContext(ContextProvider);
+  const { dark ,toggleThreads,toggleReplies ,threads} = useContext(ContextProvider);
   const user = JSON.parse(localStorage.getItem("user-threads"));
   const currentUserId = user.id;
   const navigate = useNavigate();
   const [noPost, setnoPost] = useState(false);
   const [feeds, setFeeds] = useState([]);
+  const [allPost, setallPost] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [users,setusers]=useState([])
   const handleCreatePost = () => {
@@ -40,8 +41,27 @@ function Home() {
       const res = await axios.get("http://localhost:4000/api/post/feed", {
         withCredentials: true,
       });
-      console.log(res.data)
       setFeeds(res.data);
+      if(res.data.length==0){
+        setnoPost(true)
+      }
+    } catch (error) {
+      console.log(error);
+      setnoPost(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+  async function GetAllpost() {
+    setIsLoading(true);
+    try {
+      const res = await axios.get("http://localhost:4000/api/post/getallpost", {
+        withCredentials: true,
+      });
+      setallPost(res.data.post);
+      if(res.data.length==0){
+        setnoPost(true)
+      }
     } catch (error) {
       console.log(error);
       setnoPost(true);
@@ -55,7 +75,6 @@ function Home() {
       const res = await axios.get("http://localhost:4000/api/user/allprofile", {
         withCredentials: true,
       });
-      console.log(res.data)
       setusers(res.data);
     } catch (error) {
       console.log(error);
@@ -67,6 +86,7 @@ function Home() {
   useEffect(() => {
     GetUser()
     GetFeeds();
+    GetAllpost();
   }, []);
 
   const colorSchemes = {
@@ -182,25 +202,53 @@ function Home() {
                 @{user.username.slice(0,5)+".."}
               </p>
               <button
-              className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ease-out ${
+              className={`px-5 py-0.5 mt-2 rounded-lg text-sm font-medium transition-all duration-200 ease-out ${
                 dark
-                  ? "bg-blue-500 hover:bg-blue-400 text-white shadow-blue-500/30"
-                  : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30"
-              } shadow-md hover:shadow-lg active:scale-[0.98]`}
-            >
-              View
+      ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-teal-500 hover:to-blue-500 shadow-blue-500/20"
+      : "bg-gradient-to-r from-blue-400 to-blue-500 hover:from-purple-400 hover:to-blue-400 shadow-blue-400/20"
+  } shadow-xs hover:shadow-sm hover:-translate-y-0.5 active:scale-95`}
+>
+               <p className="text-sm">view</p>
             </button>
             </Link>
           ))}
         </div>
       </div>
-
-      {/* Render feeds */}
-      <div style={{ paddingBottom: "80px" }}>
-        {feeds.map((feed) => (
-          <Feeds key={feed._id} feed={feed} toggleLike={() => toggleLike(feed._id)} />
-        ))}
+      <div>
       </div>
+      <div className="flex border-b" style={{ borderColor: dark ? '#374151' : '#e5e7eb' }}>
+        <button
+          onClick={toggleThreads}
+          className={`flex-1 py-3 font-medium relative ${threads ? (dark ? 'text-white' : 'text-blue-600') : (dark ? 'text-gray-400' : 'text-gray-500')}`}
+        >
+          All Post
+          {threads && (
+            <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-1 rounded-full ${dark ? 'bg-blue-500' : 'bg-blue-600'}`}></span>
+          )}
+        </button>
+        
+        <button
+          onClick={toggleReplies}
+          className={`flex-1 py-3 font-medium relative ${!threads ? (dark ? 'text-white' : 'text-blue-600') : (dark ? 'text-gray-400' : 'text-gray-500')}`}
+        >
+          Feeds
+          {!threads && (
+            <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-1 rounded-full ${dark ? 'bg-blue-500' : 'bg-blue-600'}`}></span>
+          )}
+        </button>
+      </div>
+      {isLoading&&<Loading/>}
+      {threads? <div style={{ paddingBottom: "80px" }}>
+        {allPost.map((post) => (
+          <Feeds key={post._id} feed={post} noPost={noPost} toggleLike={() => toggleLike(feed._id)} />
+        ))}
+      {isLoading&&<Loading/>}
+      </div>:<div style={{ paddingBottom: "80px" }}>
+        {feeds.map((feed) => (
+          <Feeds key={feed._id} toggleLike={() => toggleLike(feed._id)} />
+        ))}
+      </div>}
+      
 
       {/* Floating Action Button */}
       <button
