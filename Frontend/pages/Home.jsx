@@ -5,8 +5,8 @@ import { useContext, useEffect, useState } from "react";
 import { ContextProvider } from "../ContextApi/ContextApi";
 import axios from "axios";
 import Loading from "@/Components/Loading/Loading";
-import NotFound from "./NotFound";
 import defaultAvater from '.././src/assets/default-avatar.png'
+import NoPost from "./notFound/noPost";
 function Home() {
   const { dark ,toggleThreads,toggleReplies ,threads} = useContext(ContextProvider);
   const user = JSON.parse(localStorage.getItem("user-threads"));
@@ -78,7 +78,7 @@ function Home() {
       setusers(res.data);
     } catch (error) {
       console.log(error);
-      setnoPost(true);
+      setnoUser(true);
     } finally {
       setIsLoading(false);
     }
@@ -149,11 +149,6 @@ function Home() {
   if (isLoading) {
     return <Loading />;
   }
-
-  if (noPost) {
-    return <NotFound />;
-  }
-
   return (
     <div
       style={{
@@ -238,16 +233,27 @@ function Home() {
         </button>
       </div>
       {isLoading&&<Loading/>}
-      {threads? <div style={{ paddingBottom: "80px" }}>
-        {allPost.map((post) => (
-          <Feeds key={post._id} feed={post} noPost={noPost} toggleLike={() => toggleLike(feed._id)} />
-        ))}
-      {isLoading&&<Loading/>}
-      </div>:<div style={{ paddingBottom: "80px" }}>
-        {feeds.map((feed) => (
-          <Feeds key={feed._id} toggleLike={() => toggleLike(feed._id)} />
-        ))}
-      </div>}
+      {threads ? (
+  <div style={{ paddingBottom: "80px" }}>
+    {allPost.length > 0 ? (
+      allPost.map((post) => (
+        <Feeds key={post._id} feed={post} toggleLike={() => toggleLike(post._id)} />
+      ))
+    ) : (
+      <NoPost />
+    )}
+  </div>
+) : (
+  <div style={{ paddingBottom: "80px" }}>
+    {feeds.length > 0 ? (
+      feeds.map((feed) => (
+        <Feeds key={feed._id} feed={feed} toggleLike={() => toggleLike(feed._id)} />
+      ))
+    ) : (
+      <NoPost />
+    )}
+  </div>
+)}
       
 
       {/* Floating Action Button */}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiMoreHorizontal, FiHeart, FiMessageCircle, FiRepeat, FiShare2 } from 'react-icons/fi';
+import { FiMoreHorizontal, FiHeart, FiMessageCircle} from 'react-icons/fi';
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import { useContext } from 'react';
 import verified from "../assets/verified.png";
@@ -11,7 +11,6 @@ function Feeds(params) {
   const {toggleLike}=params
   const user=JSON.parse(localStorage.getItem("user-threads"))
   const currentUserId=user.id
-  const postedId=feed.postedBy
   const { dark } = useContext(ContextProvider);
   const [userData,setUserData]=useState([])
   // Dynamic theme classes
@@ -79,13 +78,6 @@ function Feeds(params) {
                 <img src={verified} className="w-4 h-4" alt="Verified" />
                 <span className={`text-sm ${theme.secondaryText}`}>1d</span>
               </div>
-              <button className={`
-                p-2 rounded-full
-                ${theme.hoverBg}
-                transition-colors duration-200
-              `}>
-                <FiMoreHorizontal className={theme.icon} />
-              </button>
             </div>
 
             {/* Post content */}

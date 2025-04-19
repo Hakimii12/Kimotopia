@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ContextProvider } from '../ContextApi/ContextApi';
+import { ContextProvider } from '../../ContextApi/ContextApi';
 import { motion } from 'framer-motion';
 
 function NotFound() {

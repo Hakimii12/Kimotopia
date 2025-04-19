@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ContextProvider } from '../ContextApi/ContextApi';
-import NotFound from './notFound';
+import NotFound from './notFound/NotFound';
 function UserPage() {
   const { dark } = useContext(ContextProvider);
   const { username } = useParams();
