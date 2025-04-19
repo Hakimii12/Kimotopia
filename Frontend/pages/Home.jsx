@@ -29,7 +29,8 @@ function Home() {
         { withCredentials: true }
       );
       GetFeeds();
-      console.log(users)
+      GetAllpost();
+      console.log(res)
     } catch (error) {
       console.log(error);
     }
@@ -58,7 +59,7 @@ function Home() {
       const res = await axios.get("http://localhost:4000/api/post/getallpost", {
         withCredentials: true,
       });
-      setallPost(res.data.post);
+      setallPost(res.data);
       if(res.data.length==0){
         setnoPost(true)
       }
@@ -84,9 +85,9 @@ function Home() {
     }
   }
   useEffect(() => {
+    GetAllpost();
     GetUser()
     GetFeeds();
-    GetAllpost();
   }, []);
 
   const colorSchemes = {
@@ -145,10 +146,6 @@ function Home() {
 
   const modeSchemes = dark ? colorSchemes.dark : colorSchemes.light;
   const selectedScheme = dark ? modeSchemes.midnightEmerald : modeSchemes.morningSky;
-
-  if (isLoading) {
-    return <Loading />;
-  }
   return (
     <div
       style={{
@@ -233,27 +230,27 @@ function Home() {
         </button>
       </div>
       {isLoading&&<Loading/>}
-      {threads ? (
-  <div style={{ paddingBottom: "80px" }}>
-    {allPost.length > 0 ? (
-      allPost.map((post) => (
-        <Feeds key={post._id} feed={post} toggleLike={() => toggleLike(post._id)} />
-      ))
-    ) : (
-      <NoPost />
-    )}
-  </div>
-) : (
-  <div style={{ paddingBottom: "80px" }}>
-    {feeds.length > 0 ? (
-      feeds.map((feed) => (
-        <Feeds key={feed._id} feed={feed} toggleLike={() => toggleLike(feed._id)} />
-      ))
-    ) : (
-      <NoPost />
-    )}
-  </div>
-)}
+              {threads ? (
+          <div style={{ paddingBottom: "80px" }}>
+            {allPost?.length > 0 ? (
+              allPost.map((post) => (
+                <Feeds key={post._id} feed={post}  toggleLike={() => toggleLike(post._id)} />
+              ))
+            ) : (
+              <NoPost />
+            )}
+          </div>
+        ) : (
+          <div style={{ paddingBottom: "80px" }}>
+            {feeds.length > 0 ? (
+              feeds.map((feed) => (
+                <Feeds key={feed._id} feed={feed}  toggleLike={() => toggleLike(feed._id)} />
+              ))
+            ) : (
+              <NoPost />
+            )}
+          </div>
+        )}
       
 
       {/* Floating Action Button */}

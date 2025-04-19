@@ -61,7 +61,7 @@ export async function GetAllPost(req,res) {
             return res.status(404).json({message:"post not found"})
         }
 
-        return res.status(200).json({post})
+        return res.status(200).json(post)
         
     } catch (error) {
         res.status(500).json({message:error.message})
