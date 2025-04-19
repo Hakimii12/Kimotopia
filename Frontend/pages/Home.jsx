@@ -1,12 +1,12 @@
 import Feeds from "@/Components/Feeds";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { ContextProvider } from "../ContextApi/ContextApi";
 import axios from "axios";
 import Loading from "@/Components/Loading/Loading";
 import NotFound from "./NotFound";
-
+import defaultAvater from '.././src/assets/default-avatar.png'
 function Home() {
   const { dark } = useContext(ContextProvider);
   const user = JSON.parse(localStorage.getItem("user-threads"));
@@ -15,7 +15,7 @@ function Home() {
   const [noPost, setnoPost] = useState(false);
   const [feeds, setFeeds] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [users,setusers]=useState([])
   const handleCreatePost = () => {
     navigate("/Post");
   };
@@ -28,6 +28,7 @@ function Home() {
         { withCredentials: true }
       );
       GetFeeds();
+      console.log(users)
     } catch (error) {
       console.log(error);
     }
@@ -39,6 +40,7 @@ function Home() {
       const res = await axios.get("http://localhost:4000/api/post/feed", {
         withCredentials: true,
       });
+      console.log(res.data)
       setFeeds(res.data);
     } catch (error) {
       console.log(error);
@@ -47,8 +49,23 @@ function Home() {
       setIsLoading(false);
     }
   }
-
+  async function GetUser() {
+    setIsLoading(true);
+    try {
+      const res = await axios.get("http://localhost:4000/api/user/allprofile", {
+        withCredentials: true,
+      });
+      console.log(res.data)
+      setusers(res.data);
+    } catch (error) {
+      console.log(error);
+      setnoPost(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   useEffect(() => {
+    GetUser()
     GetFeeds();
   }, []);
 
@@ -141,9 +158,9 @@ function Home() {
             dark ? "bg-slate-800" : "bg-slate-100"
           } min-h-[180px] items-center scrollbar-hide`}
         >
-          {[1, 2, 3, 4, 5].map((user) => (
-            <div
-              key={user}
+          {users?.map((user) => (
+            <Link to={`/${user.username}`}
+              key={user._id}
               className={`shrink-0 w-36 flex flex-col items-center p-3 rounded-lg ${
                 dark
                   ? "bg-slate-700 border border-slate-600"
@@ -155,24 +172,25 @@ function Home() {
                   dark ? "bg-slate-600 text-slate-200" : "bg-slate-200 text-slate-600"
                 } font-medium text-lg`}
               >
-                {String.fromCharCode(64 + user)}
+                <img src={user.profilepic||defaultAvater}
+                className="rounded-full w-10 h-10" />
               </div>
               <p className={`font-semibold text-sm mb-1 ${dark ? "text-white" : "text-slate-800"}`}>
-                User {user}
+                {user.name.slice(0,5)+".."}
               </p>
-              <p className={`text-xs mb-3 ${dark ? "text-slate-400" : "text-slate-500"}`}>
-                @user{user}
+              <p className={`text-xs mb-3 ${dark ? "text-gray-400" : "text-slate-500"}`}>
+                @{user.username.slice(0,5)+".."}
               </p>
               <button
-                className={`px-4 py-1.5 rounded-md text-xs font-semibold ${
-                  dark
-                    ? "bg-blue-600 hover:bg-blue-500 text-white"
-                    : "bg-blue-500 hover:bg-blue-600 text-white"
-                } transition-colors shadow-sm`}
-              >
-                Follow
-              </button>
-            </div>
+              className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ease-out ${
+                dark
+                  ? "bg-blue-500 hover:bg-blue-400 text-white shadow-blue-500/30"
+                  : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30"
+              } shadow-md hover:shadow-lg active:scale-[0.98]`}
+            >
+              View
+            </button>
+            </Link>
           ))}
         </div>
       </div>

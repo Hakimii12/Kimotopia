@@ -162,7 +162,13 @@ export async function getUser(req,res){
         return res.status(404).json({message:"user not found"})
     }
     return res.status(200).json(user)
-    
+}
+export async function GetAllUser(req,res){
+    const user=await User.find({}).select("-password")
+    if(!user){
+        return res.status(404).json({message:"user not found"})
+    }
+    return res.status(200).json(user)
 }
 export async function getUserId(req,res){
     const {id}=req.params
