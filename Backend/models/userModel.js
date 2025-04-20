@@ -34,8 +34,13 @@ const userSchema=new mongoose.Schema({
     bio:{
         type:String,
         default:""
+    },
+    updatedAt: { 
+        type: Date, 
+        default: Date.now 
     }
-},{
+}
+,{
     timestamps:true
 })
 const User=mongoose.model("User",userSchema)
