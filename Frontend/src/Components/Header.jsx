@@ -4,11 +4,13 @@ import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
 import { FiSun, FiMoon, FiLogOut, FiMessageSquare, FiUser } from 'react-icons/fi';
 import { useLogout } from "../../pages/Logout";
+import { Link } from 'react-router-dom';
 
 function Header() {
   const { dark, toggleLight, toggleDark } = useContext(ContextProvider);
   const Logout = useLogout()
-
+  const user = JSON.parse(localStorage.getItem("user-threads"));
+  console.log(user)
   return (
     <div className={`
       ${dark ? 'bg-gray-900' : 'bg-white'} 
@@ -86,10 +88,9 @@ function Header() {
           `}></span>
         </button>
       </div>
-
       {/* Right Icons Section */}
       <div className="flex-1 flex justify-end items-center gap-2 sm:gap-3">
-        <button
+        <Link to={`/${user.username}`}
           className={`
             p-2 
             rounded-full
@@ -121,7 +122,7 @@ function Header() {
             group-hover:scale-100
             transition-transform duration-500
           `}></span>
-        </button>
+        </Link>
 
         <button
           className={`
