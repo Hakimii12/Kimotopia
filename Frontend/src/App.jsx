@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { ContextProvider } from '../ContextApi/ContextApi'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import UserPage from '../pages/UserPage'
 import PostPage from '../pages/PostPage'
 import Header from './Components/Header'
@@ -12,6 +12,9 @@ import CreatePost from './Components/CreatePost'
 import ChatPage from '../pages/ChatPage'
 function App() {
   const { dark,isAuth,} = useContext(ContextProvider)
+  const location =useLocation()
+  const isChatPage = location.pathname === '/message';
+  console.log(location)
   return (
     <div
       className={
@@ -21,7 +24,7 @@ function App() {
       }
     >
       <div
-        className={`sm:max-w-[620px] w-full px-4 py-6  max-w-full overflow-hidden`}
+        className={isChatPage?`sm:max-w-[800px] max-w-full w-full px-4 py-6 overflow-hidden`:`sm:max-w-[620px] w-full px-4 py-6  max-w-full overflow-hidden`}
         style={{
           WebkitTextSizeAdjust: '100%',
           MozTextSizeAdjust: '100%',
