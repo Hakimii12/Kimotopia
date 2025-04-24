@@ -2,12 +2,13 @@ import React from 'react';
 import Mylogo from "../assets/Mylogo.jpg";
 import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
-import { FiSun, FiMoon, FiLogOut } from 'react-icons/fi';
+import { FiSun, FiMoon, FiLogOut, FiMessageSquare } from 'react-icons/fi';
 import { Navigate } from 'react-router-dom';
-import {useLogout} from "../../pages/Logout"
+import { useLogout } from "../../pages/Logout";
+
 function Header() {
   const { dark, toggleLight, toggleDark } = useContext(ContextProvider);
-  const Logout=useLogout()
+  const Logout = useLogout()
 
   return (
     <div className={`
@@ -29,7 +30,7 @@ function Header() {
           src={Mylogo} 
           className={`
             rounded-full 
-            w-12 h-12
+            w-10 h-10
             object-cover
             border-2
             ${dark ? 'border-gray-700' : 'border-gray-200'}
@@ -56,7 +57,7 @@ function Header() {
         <button 
           onClick={dark ? toggleLight : toggleDark}
           className={`
-            p-3 
+            p-2 
             rounded-full
             ${dark ? 'hover:bg-gray-800/60 bg-gray-800/30' : 'hover:bg-gray-100/60 bg-gray-100/30'}
             shadow-sm
@@ -76,7 +77,7 @@ function Header() {
                 group-hover:text-amber-200
                 transition-colors duration-300
               ' 
-              size={24}
+              size={20}
             />
           ) : (
             <FiMoon 
@@ -85,7 +86,7 @@ function Header() {
                 group-hover:text-indigo-700
                 transition-colors duration-300
               ' 
-              size={24}
+              size={20}
             />
           )}
           <span className={`
@@ -102,12 +103,46 @@ function Header() {
         </button>
       </div>
 
-      {/* Logout button on the right - fixed width */}
-      <div  className="w-1/3 flex justify-end">
+      {/* Right side icons */}
+      <div className="w-1/3 flex justify-end items-center gap-2">
         <button
-        onClick={Logout}
           className={`
-            p-3 
+            p-2 
+            rounded-full
+            ${dark ? 'hover:bg-gray-800/60 bg-gray-800/30' : 'hover:bg-gray-100/60 bg-gray-100/30'}
+            shadow-sm
+            ${dark ? 'shadow-gray-800' : 'shadow-gray-200'}
+            transition-all duration-300
+            group
+            relative
+            overflow-hidden
+          `}
+          aria-label="Messages"
+        >
+          <FiMessageSquare 
+            className={`
+              ${dark ? 'text-blue-400 group-hover:text-blue-300' : 'text-indigo-600 group-hover:text-indigo-700'}
+              transition-colors duration-300
+            `}
+            size={20}
+          />
+          <span className={`
+            absolute inset-0
+            ${dark ? 'bg-blue-400/10' : 'bg-indigo-400/10'}
+            opacity-0
+            group-hover:opacity-100
+            transition-opacity duration-300
+            rounded-full
+            scale-0
+            group-hover:scale-100
+            transition-transform duration-500
+          `}></span>
+        </button>
+
+        <button
+          onClick={Logout}
+          className={`
+            p-2 
             rounded-full
             ${dark ? 'hover:bg-gray-800/60 bg-gray-800/30' : 'hover:bg-gray-100/60 bg-gray-100/30'}
             shadow-sm
@@ -124,7 +159,7 @@ function Header() {
               ${dark ? 'text-red-400 group-hover:text-red-300' : 'text-red-500 group-hover:text-red-600'}
               transition-colors duration-300
             `} 
-            size={24}
+            size={20}
           />
           <span className={`
             absolute inset-0
