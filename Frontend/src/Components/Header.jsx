@@ -2,8 +2,7 @@ import React from 'react';
 import Mylogo from "../assets/Mylogo.jpg";
 import { useContext } from 'react';
 import { ContextProvider } from '../../ContextApi/ContextApi';
-import { FiSun, FiMoon, FiLogOut, FiMessageSquare } from 'react-icons/fi';
-import { Navigate } from 'react-router-dom';
+import { FiSun, FiMoon, FiLogOut, FiMessageSquare, FiUser } from 'react-icons/fi';
 import { useLogout } from "../../pages/Logout";
 
 function Header() {
@@ -14,7 +13,7 @@ function Header() {
     <div className={`
       ${dark ? 'bg-gray-900' : 'bg-white'} 
       flex items-center justify-between 
-      px-6 py-4
+      px-4 sm:px-6 py-3 sm:py-4
       shadow-lg
       ${dark ? 'shadow-gray-900/30' : 'shadow-gray-200/50'}
       backdrop-blur-sm
@@ -24,13 +23,13 @@ function Header() {
       ${dark ? 'border-gray-800' : 'border-gray-100'}
       transition-all duration-300 ease-in-out
     `}>
-      {/* Logo on the left - fixed width */}
-      <div className="w-1/3 flex items-center space-x-3">
+      {/* Logo Section */}
+      <div className="flex items-center space-x-2 sm:space-x-3 flex-1">
         <img 
           src={Mylogo} 
           className={`
             rounded-full 
-            w-10 h-10
+            w-8 h-8 sm:w-10 sm:h-10
             object-cover
             border-2
             ${dark ? 'border-gray-700' : 'border-gray-200'}
@@ -42,7 +41,7 @@ function Header() {
           alt="App Logo"
         />
         <h1 className={`
-          text-xl font-bold
+          text-lg sm:text-xl font-bold
           bg-gradient-to-r
           ${dark ? 'from-blue-400 to-purple-500' : 'from-blue-600 to-purple-700'}
           bg-clip-text text-transparent
@@ -52,7 +51,7 @@ function Header() {
         </h1>
       </div>
 
-      {/* Light/Dark mode toggle in the absolute center */}
+      {/* Center Spacer */}
       <div className="flex-1 flex justify-center">
         <button 
           onClick={dark ? toggleLight : toggleDark}
@@ -66,28 +65,13 @@ function Header() {
             group
             relative
             overflow-hidden
-            mx-auto
           `}
           aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {dark ? (
-            <FiSun 
-              className='
-                text-amber-300 
-                group-hover:text-amber-200
-                transition-colors duration-300
-              ' 
-              size={20}
-            />
+            <FiSun className='text-amber-300 group-hover:text-amber-200' size={20} />
           ) : (
-            <FiMoon 
-              className='
-                text-indigo-600
-                group-hover:text-indigo-700
-                transition-colors duration-300
-              ' 
-              size={20}
-            />
+            <FiMoon className='text-indigo-600 group-hover:text-indigo-700' size={20} />
           )}
           <span className={`
             absolute inset-0
@@ -103,8 +87,42 @@ function Header() {
         </button>
       </div>
 
-      {/* Right side icons */}
-      <div className="w-1/3 flex justify-end items-center gap-2">
+      {/* Right Icons Section */}
+      <div className="flex-1 flex justify-end items-center gap-2 sm:gap-3">
+        <button
+          className={`
+            p-2 
+            rounded-full
+            ${dark ? 'hover:bg-gray-800/60 bg-gray-800/30' : 'hover:bg-gray-100/60 bg-gray-100/30'}
+            shadow-sm
+            ${dark ? 'shadow-gray-800' : 'shadow-gray-200'}
+            transition-all duration-300
+            group
+            relative
+            overflow-hidden
+          `}
+          aria-label="Profile"
+        >
+          <FiUser 
+            className={`
+              ${dark ? 'text-emerald-400 group-hover:text-emerald-300' : 'text-green-600 group-hover:text-green-700'}
+              transition-colors duration-300
+            `}
+            size={20}
+          />
+          <span className={`
+            absolute inset-0
+            ${dark ? 'bg-emerald-400/10' : 'bg-green-400/10'}
+            opacity-0
+            group-hover:opacity-100
+            transition-opacity duration-300
+            rounded-full
+            scale-0
+            group-hover:scale-100
+            transition-transform duration-500
+          `}></span>
+        </button>
+
         <button
           className={`
             p-2 
