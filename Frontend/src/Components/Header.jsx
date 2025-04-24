@@ -10,7 +10,6 @@ function Header() {
   const { dark, toggleLight, toggleDark } = useContext(ContextProvider);
   const Logout = useLogout()
   const user = JSON.parse(localStorage.getItem("user-threads"));
-  console.log(user)
   return (
     <div className={`
       ${dark ? 'bg-gray-900' : 'bg-white'} 
@@ -90,7 +89,7 @@ function Header() {
       </div>
       {/* Right Icons Section */}
       <div className="flex-1 flex justify-end items-center gap-2 sm:gap-3">
-        <Link to={`/${user.username}`}
+        <Link to={user?`/${user.username}`:`/login`}
           className={`
             p-2 
             rounded-full
