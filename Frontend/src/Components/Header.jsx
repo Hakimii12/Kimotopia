@@ -5,7 +5,7 @@ import { ContextProvider } from '../../ContextApi/ContextApi';
 import { FiSun, FiMoon, FiLogOut, FiMessageSquare, FiUser } from 'react-icons/fi';
 import { useLogout } from "../../pages/Logout";
 import { Link } from 'react-router-dom';
-
+import ChatPage from '../../pages/ChatPage';
 function Header() {
   const { dark, toggleLight, toggleDark } = useContext(ContextProvider);
   const Logout = useLogout()
@@ -122,8 +122,7 @@ function Header() {
             transition-transform duration-500
           `}></span>
         </Link>
-
-        <button
+        <Link to='/message'
           className={`
             p-2 
             rounded-full
@@ -155,7 +154,7 @@ function Header() {
             group-hover:scale-100
             transition-transform duration-500
           `}></span>
-        </button>
+        </Link>
 
         <button
           onClick={Logout}
