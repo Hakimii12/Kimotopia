@@ -25,6 +25,7 @@ const ChatPage = () => {
     ]);
     const [newMessage, setNewMessage] = useState('');
     const [username, setUsername] = useState('');
+    const [showConversations, setShowConversations] = useState(false);
     const messagesEndRef = useRef(null);
 
     const mockConversations = [
@@ -90,8 +91,10 @@ const ChatPage = () => {
 
     return (
         <div className={`flex h-screen ${dark ? 'bg-gray-900' : 'bg-gray-100'}`}>
-            {/* Left Sidebar */}
-            <div className={`w-1/4 border-r ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+            {/* Conversations Sidebar (Mobile) */}
+            <div className={`fixed left-0 top-2 bottom-0 w-3/4 md:w-1/4 transform transition-transform duration-300 ease-in-out ${
+                showConversations ? 'translate-x-0' : '-translate-x-full'
+            } md:translate-x-0 z-30 ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-r`}>
                 <div className={`p-4 border-b ${dark ? 'border-gray-700' : 'border-gray-200'}`}>
                     <h3 className={`text-xl font-semibold ${dark ? 'text-white' : 'text-gray-800'}`}>Chat App</h3>
                     <div className="mt-4">
@@ -120,7 +123,16 @@ const ChatPage = () => {
                                 dark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                             }`}
                         >
-                            <div className={`h-2 w-2 rounded-full mr-2 ${user.online ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                            <div className="relative mr-2">
+                                <img
+                                    src={`https://ui-avatars.com/api/?name=${user.username}&background=random&color=fff`}
+                                    className="h-8 w-8 rounded-full"
+                                    alt={user.username}
+                                />
+                                {user.online && (
+                                    <div className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-green-500 border-2 border-white"></div>
+                                )}
+                            </div>
                             <div className="flex-1">
                                 <p className={dark ? 'text-gray-200' : 'text-gray-700'}>{user.username}</p>
                                 <p className={`text-xs ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -139,16 +151,58 @@ const ChatPage = () => {
                 </div>
             </div>
 
+            {showConversations && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+                    onClick={() => setShowConversations(false)}
+                />
+            )}
+
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col relative z-10">
+                {/* Mobile Header */}
+                <div className={`md:hidden p-4 border-b flex items-center space-x-4 ${
+                    dark ? 'border-gray-700' : 'border-gray-200'
+                }`}>
+                    <button
+                        onClick={() => setShowConversations(!showConversations)}
+                        className={`p-2 ${dark ? 'text-white' : 'text-gray-800'}`}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <div className="flex-1 flex items-center space-x-2">
+                        {username ? (
+                            <>
+                                <img
+                                    src={`https://ui-avatars.com/api/?name=${username}&background=random&color=fff`}
+                                    className="h-6 w-6 rounded-full"
+                                    alt={username}
+                                />
+                                <span className={dark ? 'text-white' : 'text-gray-800'}>{username}</span>
+                            </>
+                        ) : (
+                            <span className={dark ? 'text-gray-400' : 'text-gray-500'}>Enter your name</span>
+                        )}
+                    </div>
+                </div>
+
                 {/* Messages Container */}
-                <div className={`flex-1 overflow-y-auto p-4 space-y-4 ${dark ? 'bg-gray-900' : ''}`}>
+                <div className={`flex-1 overflow-y-auto p-4 space-y-4 pb-24 ${dark ? 'bg-gray-900' : ''}`}>
                     {messages.map((msg, index) => (
                         <div 
                             key={index}
-                            className={`flex ${msg.fromUser ? 'justify-end' : 'justify-start'}`}
+                            className={`flex ${msg.fromUser ? 'justify-end' : 'justify-start'} items-start`}
                         >
-                            <div className={`max-w-md p-3 rounded-lg ${
+                            {!msg.fromUser && (
+                                <img
+                                    src={`https://ui-avatars.com/api/?name=${msg.sender}&background=random&color=fff`}
+                                    className="h-8 w-8 rounded-full mr-2"
+                                    alt={msg.sender}
+                                />
+                            )}
+                            <div className={`max-w-[70%] md:max-w-md p-3 rounded-lg ${
                                 msg.fromUser 
                                     ? `${dark ? 'bg-blue-600' : 'bg-blue-500'} text-white`
                                     : `${dark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`
@@ -177,15 +231,17 @@ const ChatPage = () => {
                 </div>
 
                 {/* Input Area */}
-                <div className={`border-t p-4 ${dark ? 'border-gray-700 bg-gray-800' : 'border-gray-200'}`}>
+                <div className={`border-t p-4 sticky bottom-0 ${
+                    dark ? 'border-gray-700 bg-gray-800' : 'border-gray-200'
+                }`}>
                     <div className="flex gap-2">
                         <textarea
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
                             placeholder="Type a message..."
-                            rows="1"
-                            className={`flex-1 resize-none rounded-lg p-3 focus:outline-none focus:ring-2 ${
+                            rows="2"
+                            className={`flex-1 resize-none rounded-lg p-2 md:p-3 focus:outline-none focus:ring-2 ${
                                 dark 
                                     ? 'bg-gray-700 text-white focus:ring-blue-400' 
                                     : 'border focus:ring-blue-500'
@@ -194,7 +250,7 @@ const ChatPage = () => {
                         />
                         <button
                             onClick={sendMessage}
-                            className={`px-6 py-2 rounded-lg transition-colors ${
+                            className={`px-4 md:px-6 py-2 rounded-lg transition-colors ${
                                 dark
                                     ? 'bg-blue-600 hover:bg-blue-700'
                                     : 'bg-blue-500 hover:bg-blue-600'
