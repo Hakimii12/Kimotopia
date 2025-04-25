@@ -76,7 +76,7 @@ function App() {
           <Route path='/' element={isAuth?<Home/>:<Navigate to="/login" />}/>
           <Route path='/update' element={isAuth?<UpdateProfile/>:<Navigate to="/login" />}/>
           <Route path='/login' element={<Authentication/>}/>
-          <Route path='/message' element={<ChatPage/>}/>
+          <Route path='/message' element={isAuth?<ChatPage/>:<Navigate to="/login" />}/>
           <Route path='/post' element={isAuth?<CreatePost/>:<Navigate to="/login" />}/>
           <Route path='/signUp' element={<Authentication/>}/>
           <Route path='/:username' element={isAuth? <UserPage /> : <Navigate to="/login"/>} />
