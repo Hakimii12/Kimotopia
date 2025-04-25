@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser'
 import cloudinary from './database/Cloudinary.js'
 import userRouter from './routes/userRoutes.js'
 import postRouter from './routes/postRoutes.js'
+import messagesRouter from './routes/messagesRouter.js'
 const app=express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -23,11 +24,10 @@ Database()
 //cloudinary
 cloudinary
 //initializing model
-userModel
-postModel
 //intializing routes
 app.use('/api/user',userRouter)
 app.use('/api/post',postRouter)
+app.use('/api/messages',messagesRouter)
 //app listining to the port
 dotenv.config()
 const port=process.env.PORT

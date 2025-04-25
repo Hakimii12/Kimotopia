@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { ContextProvider } from '../ContextApi/ContextApi';
-
 const ChatPage = () => {
     const user = JSON.parse(localStorage.getItem("user-threads"));
+    const username=user.username
     const { dark } = useContext(ContextProvider);
     const [messages, setMessages] = useState([
         { 
@@ -25,7 +25,6 @@ const ChatPage = () => {
         },
     ]);
     const [newMessage, setNewMessage] = useState('');
-    const [username, setUsername] = useState('');
     const [showConversations, setShowConversations] = useState(false);
     const messagesEndRef = useRef(null);
 
