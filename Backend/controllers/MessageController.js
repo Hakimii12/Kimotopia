@@ -3,13 +3,14 @@ import Messages from "../models/MessageModel.js";
 
 export async function CreateMessage(req,res){
     const {particepant,message}=req.body;
-    const sendId=req.user_id;
+    const sendId=req.user._id;
+    console.log(sendId)
     try {
-        const conversation= await Conversation.findOne({ participants: { $all: [sendId, particepant] } });
+        let conversation= await Conversation.findOne({ participants: { $all: [sendId, particepant] } });
         if(!conversation){
                conversation=new Conversation({
                 particepants:[sendId,particepant],
-                text:{
+                lastMessage:{
                     text:message,
                     sender:sendId 
                 }
@@ -21,7 +22,7 @@ export async function CreateMessage(req,res){
             sender:sendId,
             text:message
         })
-        await promise.all([
+        await Promise.all([
             newMessage.save(),
             conversation.updateOne({
                 lastMessage:{

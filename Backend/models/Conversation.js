@@ -3,10 +3,11 @@ const conversationSchema = new mongoose.Schema({
     particepants:[{type :mongoose.Schema.Types.ObjectId,ref:"User"}],  
     lastMessage:{
         text:{
-            type:String,
-            sender:{types:mongoose.Schema.Types.ObjectId,ref:"User"},
-        }
+            type:String
+        },
 
+            sender:{type:mongoose.Schema.Types.ObjectId,ref:"User"},
+        
     }
 },{timestamps:true})
 const Conversation=mongoose.model("Conversation",conversationSchema)
