@@ -4,7 +4,6 @@ import Messages from "../models/MessageModel.js";
 export async function CreateMessage(req,res){
     const {particepant,message}=req.body;
     const sendId=req.user._id;
-    console.log(sendId)
     try {
         let conversation= await Conversation.findOne({ participants: { $all: [sendId, particepant] } });
         if(!conversation){
@@ -36,6 +35,5 @@ export async function CreateMessage(req,res){
         res.status(500).json({message:error.message})
         console.log(error.message)
     }
-
 }
 
