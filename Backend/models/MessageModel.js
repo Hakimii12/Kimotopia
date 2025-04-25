@@ -14,4 +14,5 @@ const messageSchema = new mongoose.Schema({
         default:Date.now
     }
 })
-const messages=mongoose.model("Messages",messageSchema)
+const Messages=mongoose.model("Messages",messageSchema)
+export default Messages
