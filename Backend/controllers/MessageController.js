@@ -21,8 +21,16 @@ export async function CreateMessage(req,res){
             sender:sendId,
             text:message
         })
-        await newMessage.save();
-        res.status(200).json(newMessage);
+        await promise.all([
+            newMessage.save(),
+            conversation.updateOne({
+                lastMessage:{
+                    text:message,
+                    sender:sendId
+                }
+            })
+        ])
+        res.status(201).json(newMessage);
     } catch (error) {
         res.status(500).json({message:error.message})
         console.log(error.message)
