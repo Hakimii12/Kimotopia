@@ -4,15 +4,10 @@ const messageSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,ref:"Conversation"  
     },
     sender:{
-       type:mongoose.Types.ObjectId,ref:"User"
+       type:mongoose.Schema.Types.ObjectId,ref:"User"
     },
-    text:{
-        type:String,
-    },
-    createdAt:{
-        type:Date,
-        default:Date.now
-    }
-})
+    text:String,
+
+},{timestamps:true})
 const Messages=mongoose.model("Messages",messageSchema)
 export default Messages
