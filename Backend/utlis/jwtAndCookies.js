@@ -10,7 +10,8 @@ function jwtToken(userId,res){
     res.cookie("jwt",token,{
         httpOnly:true,
         maxAge:3*60*60*1000,
-        sameSite:"strict"
+        sameSite:"None",
+        secure:true
     })
     return token
 }
